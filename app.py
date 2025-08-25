@@ -231,6 +231,8 @@ def main():
     # Initialize page selection
     if 'current_page' not in st.session_state:
         st.session_state.current_page = "🖥️ System Overview"
+
+        
     
     # System Monitoring section
     st.sidebar.markdown("### 📊 **System Monitoring**")
@@ -240,6 +242,18 @@ def main():
         st.session_state.current_page = "🔍 Full System Scan"
     if st.sidebar.button("📊 Real-Time Monitoring", use_container_width=True):
         st.session_state.current_page = "📊 Real-Time Monitoring"
+
+    # AI Threat Detection section
+    st.sidebar.markdown("### 🤖 **AI Threat Detection**")
+    if st.sidebar.button("🧠 AI Threat Engine", use_container_width=True):
+        st.session_state.current_page = "🧠 AI Threat Engine"
+    if st.sidebar.button("🔒 Ransomware Protection", use_container_width=True):
+        st.session_state.current_page = "🔒 Ransomware Protection"
+    if st.sidebar.button("🎯 Zero-Day Detection", use_container_width=True):
+        st.session_state.current_page = "🎯 Zero-Day Detection"
+    if st.sidebar.button("📊 False Positive Analytics", use_container_width=True):
+        st.session_state.current_page = "📊 False Positive Analytics"
+        
     
     # Security Scans section
     st.sidebar.markdown("### 🔍 **Security Scans**")
@@ -264,16 +278,6 @@ def main():
         st.session_state.current_page = "☁ Cloud Security Monitoring"
     
     
-    # AI Threat Detection section
-    st.sidebar.markdown("### 🤖 **AI Threat Detection**")
-    if st.sidebar.button("🧠 AI Threat Engine", use_container_width=True):
-        st.session_state.current_page = "🧠 AI Threat Engine"
-    if st.sidebar.button("🔒 Ransomware Protection", use_container_width=True):
-        st.session_state.current_page = "🔒 Ransomware Protection"
-    if st.sidebar.button("🎯 Zero-Day Detection", use_container_width=True):
-        st.session_state.current_page = "🎯 Zero-Day Detection"
-    if st.sidebar.button("📊 False Positive Analytics", use_container_width=True):
-        st.session_state.current_page = "📊 False Positive Analytics"
     
     # Get current page
     page = st.session_state.current_page
