@@ -23,8 +23,24 @@ import requests
 import json
 import random
 from pathlib import Path
+import logging
+import ftplib
+import glob
+import re
+from io import StringIO
+import xml.etree.ElementTree as ET
+import json
+import csv
 
-
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler("security_scanner.log"),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger("SecurityScanner")
 
 # Configure page
 st.set_page_config(
@@ -34,189 +50,2171 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 def inject_ultra_pro_css():
-    st.markdown("""
-    <style>
-        /* ========== BACKGROUND (Animated Matrix Grid) ========== */
-        body {
-            background: #020617;
-            color: #e2e8f0;
-            font-family: 'Orbitron', sans-serif;
-            overflow-x: hidden;
-        }
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(180deg, rgba(56,189,248,0.05) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(56,189,248,0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            animation: moveGrid 20s linear infinite;
-            z-index: -2;
-        }
-        @keyframes moveGrid {
-            from { background-position: 0 0, 0 0; }
-            to { background-position: 200px 200px, 200px 200px; }
-        }
+    def inject_ultra_pro_css():
+        st.markdown("""
+        <style>
+            /* ========== GLOBAL STYLES ========== */
+            body {
+                background: #0f172a;
+                color: #e2e8f0;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+            }
+            
+            /* ========== TYPOGRAPHY ========== */
+            h1, h2, h3, h4, h5, h6 {
+                font-weight: 600;
+                color: #f8fafc;
+                margin-bottom: 0.75rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+                border-bottom: 2px solid #334155;
+                padding-bottom: 0.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+                color: #38bdf8;
+                margin-top: 2rem;
+            }
+            
+            h3 {
+                font-size: 1.5rem;
+                color: #7dd3fc;
+            }
+            
+            /* ========== CONTAINERS & LAYOUT ========== */
+            .main .block-container {
+                padding-top: 2rem;
+                padding-bottom: 3rem;
+            }
+            
+            .stButton button {
+                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                color: white;
+                border: none;
+                padding: 0.5rem 1.5rem;
+                border-radius: 6px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+            
+            .stButton button:hover {
+                background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+            }
+            
+            /* ========== SIDEBAR ========== */
+            section[data-testid="stSidebar"] {
+                background: #1e293b;
+                border-right: 1px solid #334155;
+            }
+            
+            section[data-testid="stSidebar"] div:first-child {
+                padding-top: 2rem;
+            }
+            
+            section[data-testid="stSidebar"] .stButton button {
+                width: 100%;
+                margin: 0.25rem 0;
+                background: transparent;
+                border: 1px solid #475569;
+                color: #cbd5e1;
+            }
+            
+            section[data-testid="stSidebar"] .stButton button:hover {
+                background: #334155;
+                border-color: #64748b;
+                color: #f1f5f9;
+            }
+            
+            /* ========== METRICS & CARDS ========== */
+            .stMetric {
+                background: #1e293b;
+                border: 1px solid #334155;
+                border-radius: 8px;
+                padding: 1rem;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+            
+            .stMetric label {
+                color: #94a3b8 !important;
+                font-size: 0.9rem;
+                font-weight: 500;
+            }
+            
+            .stMetric div {
+                color: #f8fafc !important;
+                font-size: 1.5rem;
+                font-weight: 700;
+            }
+            
+            /* ========== DATA FRAMES & TABLES ========== */
+            .stDataFrame {
+                border: 1px solid #334155;
+                border-radius: 8px;
+            }
+            
+            /* ========== TABS ========== */
+            .stTabs [data-baseweb="tab-list"] {
+                gap: 8px;
+                background-color: #1e293b;
+                padding: 0.5rem;
+                border-radius: 8px;
+            }
+            
+            .stTabs [data-baseweb="tab"] {
+                background-color: #334155;
+                border-radius: 4px;
+                padding: 0.5rem 1rem;
+                color: #cbd5e1;
+                font-weight: 500;
+            }
+            
+            .stTabs [aria-selected="true"] {
+                background-color: #2563eb;
+                color: white;
+            }
+            
+            /* ========== EXPANDERS ========== */
+            .streamlit-expanderHeader {
+                background: #1e293b;
+                border: 1px solid #334155;
+                border-radius: 6px;
+                padding: 0.75rem 1rem;
+                font-weight: 500;
+            }
+            
+            .streamlit-expanderContent {
+                background: #1e293b;
+                border: 1px solid #334155;
+                border-top: none;
+                border-radius: 0 0 6px 6px;
+                padding: 1rem;
+            }
+            
+            /* ========== ALERTS & NOTIFICATIONS ========== */
+            .stAlert {
+                border-radius: 8px;
+                padding: 1rem;
+            }
+            
+            div[data-testid="stNotification"] {
+                background: #1e293b;
+                border: 1px solid #334155;
+                border-radius: 8px;
+            }
+            
+            /* ========== PROGRESS BAR ========== */
+            .stProgress > div > div {
+                background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+            }
+            
+            /* ========== CODE BLOCKS ========== */
+            .stCodeBlock {
+                background: #1e293b;
+                border: 1px solid #334155;
+                border-radius: 6px;
+                padding: 1rem;
+            }
+            
+            /* ========== TEXT INPUT ========== */
+            .stTextInput input {
+                background: #1e293b;
+                border: 1px solid #475569;
+                color: #e2e8f0;
+                border-radius: 6px;
+            }
+            
+            .stTextInput label {
+                color: #94a3b8;
+                font-weight: 500;
+            }
+            
+            /* ========== SELECT BOX ========== */
+            .stSelectbox label {
+                color: #94a3b8;
+                font-weight: 500;
+            }
+            
+            /* ========== CHECKBOX ========== */
+            .stCheckbox label {
+                color: #e2e8f0;
+            }
+            
+            /* ========== RADIO BUTTONS ========== */
+            .stRadio label {
+                color: #e2e8f0;
+            }
+            
+            /* ========== SLIDER ========== */
+            .stSlider label {
+                color: #94a3b8;
+                font-weight: 500;
+            }
+            
+            /* ========== COLOR SCHEME ========== */
+            :root {
+                --primary: #2563eb;
+                --primary-dark: #1d4ed8;
+                --secondary: #64748b;
+                --success: #10b981;
+                --warning: #f59e0b;
+                --danger: #ef4444;
+                --dark: #1e293b;
+                --darker: #0f172a;
+                --light: #f1f5f9;
+                --text-primary: #f8fafc;
+                --text-secondary: #cbd5e1;
+                --text-muted: #94a3b8;
+                --border: #334155;
+            }
+        </style>
+        """, unsafe_allow_html=True)
 
-        /* Floating particles */
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle, rgba(56,189,248,0.2) 1px, transparent 1px);
-            background-size: 100px 100px;
-            animation: floatParticles 10s ease-in-out infinite alternate;
-            z-index: -1;
-        }
-        @keyframes floatParticles {
-            from { background-position: 0 0; }
-            to { background-position: 50px 50px; }
-        }
 
-        /* ========== PAGE TRANSITIONS ========== */
-        .main {
-            animation: fadeSlideUp 1s ease;
-        }
-        @keyframes fadeSlideUp {
-            0% { opacity: 0; transform: translateY(40px) scale(0.98); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
+TTP_DATABASE = {
+    "T1003": {
+        "name": "OS Credential Dumping",
+        "patterns": [
+            r"lsass\.exe.*dump",
+            r"procdump.*lsass",
+            r"mimikatz",
+            r"sekurlsa::logonpasswords"
+        ],
+        "severity": "High"
+    },
+    "T1059": {
+        "name": "Command and Scripting Interpreter",
+        "patterns": [
+            r"powershell.*-enc",
+            r"cmd\.exe.*/c",
+            r"wscript\.exe.*\.vbs",
+            r"bash.*-c"
+        ],
+        "severity": "Medium"
+    },
+    "T1071": {
+        "name": "Application Layer Protocol",
+        "patterns": [
+            r"HTTP.*User-Agent.*(python|curl|wget)",
+            r"DNS.*exfiltration",
+            r"ICMP.*tunnel"
+        ],
+        "severity": "Medium"
+    },
+    # Add more TTP patterns as needed
+}
 
-        /* ========== HERO TITLE ========== */
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            text-align: center;
-            margin: 0 0 2rem 0;
-            background: linear-gradient(270deg, #0ea5e9, #6366f1, #f43f5e, #22d3ee);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 400% 400%;
-            animation: gradientSweep 8s ease infinite, fadeSlideUp 1s ease;
-        }
-        @keyframes gradientSweep {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+# Add log format patterns
+LOG_FORMATS = {
+    "syslog": r"<(\d+)>(\w{3}\s+\d+\s+\d+:\d+:\d+)\s+(\S+)\s+([^:]+):?\s*(.*)",
+    "apache": r'^(\S+) (\S+) (\S+) \[([^]]+)\] "([^"]*)" (\d+) (\d+) "([^"]*)" "([^"]*)"',
+    "iis": r'^(\S+) (\S+) (\S+) (\S+) (\d+) (\S+) (\S+) (\d+) (\d+) (\d+) (\S+)',
+    "windows": r'^(\w+)\s+(\d+)\s+(\d+:\d+:\d+)\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)\s+(.*)'
+}
 
-        /* ========== SIDEBAR NAV ========== */
-        section[data-testid="stSidebar"] {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(20px);
-            border-right: 2px solid rgba(56,189,248,0.5);
-            padding-top: 30px;
-            animation: fadeSlideUp 0.8s ease;
-        }
-        section[data-testid="stSidebar"] button {
-            background: transparent;
-            border: 1px solid rgba(56,189,248,0.5);
-            border-radius: 12px;
-            margin: 6px 0;
-            color: #38bdf8;
-            font-weight: 700;
-            text-transform: uppercase;
-            transition: all 0.35s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        section[data-testid="stSidebar"] button:hover {
-            background: rgba(56,189,248,0.25);
-            color: white;
-            transform: translateX(8px) scale(1.05);
-            box-shadow: 0 0 20px #38bdf8;
-        }
+class LogCollector:
+    """Collect logs from various sources with comprehensive real implementations"""
+    
+    def __init__(self):
+        self.log_sources = []
+        self.collected_logs = []
+    
+    def add_all_log_sources(self):
+        """Add all types of log sources automatically"""
+        # Clear existing sources
+        self.log_sources = []
+        
+        # System-Level Logs
+        self.add_system_logs_source()
+        self.add_kernel_logs_source()
+        self.add_boot_logs_source()
+        self.add_driver_logs_source()
+        
+        # Application & Software Logs
+        self.add_application_logs_source()
+        self.add_web_server_logs_source()
+        self.add_database_logs_source()
+        self.add_middleware_logs_source()
+        
+        # Security & Audit Logs
+        self.add_auth_logs_source()
+        self.add_audit_logs_source()
+        self.add_ids_ips_logs_source()
+        self.add_firewall_logs_source()
+        self.add_antivirus_logs_source()
+        
+        # Network & Infrastructure Logs
+        self.add_network_logs_source()
+        self.add_proxy_logs_source()
+        self.add_router_switch_logs_source()
+        self.add_vpn_logs_source()
+        self.add_dns_logs_source()
+        
+        # Cloud & DevOps Logs
+        self.add_container_logs_source()
+        self.add_orchestration_logs_source()
+        self.add_ci_cd_logs_source()
+        self.add_cloud_provider_logs_source()
+        
+        # Business Logs
+        self.add_business_logs_source()
+        
+        logger.info(f"Added {len(self.log_sources)} log sources")
+    
+    def add_system_logs_source(self):
+        """Add system logs (syslog/event logs)"""
+        if platform.system() == "Windows":
+            self.log_sources.extend([
+                {'type': 'command', 'command': 'wevtutil qe System /rd:true /c:50 /f:text', 'name': 'Windows System Logs'},
+                {'type': 'command', 'command': 'wevtutil qe Application /rd:true /c:50 /f:text', 'name': 'Windows Application Logs'},
+            ])
+        else:
+            self.log_sources.extend([
+                {'type': 'file', 'path': '/var/log/syslog', 'name': 'System Logs'},
+                {'type': 'file', 'path': '/var/log/messages', 'name': 'System Messages'},
+            ])
+    
+    def add_kernel_logs_source(self):
+        """Add kernel logs"""
+        if platform.system() != "Windows":
+            self.log_sources.extend([
+                {'type': 'file', 'path': '/var/log/kern.log', 'name': 'Kernel Logs'},
+                {'type': 'command', 'command': 'dmesg | tail -50', 'name': 'Kernel Ring Buffer'},
+            ])
+    
+    def add_boot_logs_source(self):
+        """Add boot logs"""
+        if platform.system() == "Windows":
+            self.log_sources.append({
+                'type': 'command', 
+                'command': 'wevtutil qe System /rd:true /c:20 /f:text /q:"*[System[(EventID=6005 or EventID=6006)]]"',
+                'name': 'Boot/Shutdown Logs'
+            })
+        else:
+            self.log_sources.extend([
+                {'type': 'file', 'path': '/var/log/boot.log', 'name': 'Boot Logs'},
+                {'type': 'command', 'command': 'journalctl --boot | tail -30', 'name': 'Systemd Boot Logs'},
+            ])
+    
+    def add_driver_logs_source(self):
+        """Add driver logs"""
+        if platform.system() == "Windows":
+            self.log_sources.append({
+                'type': 'command',
+                'command': 'wevtutil qe System /rd:true /c:20 /f:text /q:"*[System/Provider[@Name=\"DriverFrameworks-UserMode\"]]"',
+                'name': 'Driver Logs'
+            })
+    
+    def add_application_logs_source(self):
+        """Add application-specific logs"""
+        common_app_logs = []
+        
+        # Common application log locations
+        if platform.system() == "Windows":
+            common_app_logs = [
+                'C:\\Program Files\\*\\logs\\*.log',
+                'C:\\Users\\*\\AppData\\Local\\*\\*.log',
+                'C:\\Users\\*\\AppData\\Roaming\\*\\*.log',
+            ]
+        else:
+            common_app_logs = [
+                '/var/log/*.log',
+                '/var/log/*/*.log',
+                '/home/*/.local/share/*/*.log',
+                '/opt/*/logs/*.log',
+            ]
+        
+        for pattern in common_app_logs[:3]:  # Limit to first 3 patterns
+            self.log_sources.append({
+                'type': 'pattern',
+                'pattern': pattern,
+                'name': f'Application Logs: {pattern}'
+            })
+    
+    def add_web_server_logs_source(self):
+        """Add web server logs"""
+        web_servers = [
+            {'name': 'Apache', 'logs': ['/var/log/apache2/access.log', '/var/log/apache2/error.log', '/var/log/httpd/access_log']},
+            {'name': 'Nginx', 'logs': ['/var/log/nginx/access.log', '/var/log/nginx/error.log']},
+            {'name': 'IIS', 'logs': ['C:\\inetpub\\logs\\LogFiles\\*\\*.log']},
+        ]
+        
+        for server in web_servers:
+            for log_path in server['logs']:
+                if os.path.exists(log_path) or '*' in log_path:
+                    self.log_sources.append({
+                        'type': 'file',
+                        'path': log_path,
+                        'name': f'{server["name"]} Logs'
+                    })
+    
+    def add_database_logs_source(self):
+        """Add database logs"""
+        databases = [
+            {'name': 'MySQL', 'logs': ['/var/log/mysql/error.log', '/var/log/mysql.log', 'C:\\MySQL\\data\\*.err']},
+            {'name': 'PostgreSQL', 'logs': ['/var/log/postgresql/*.log', '/usr/local/var/postgres/*.log']},
+            {'name': 'MongoDB', 'logs': ['/var/log/mongodb/mongod.log', '/var/lib/mongo/*.log']},
+        ]
+        
+        for db in databases:
+            for log_path in db['logs']:
+                if os.path.exists(log_path) or '*' in log_path:
+                    self.log_sources.append({
+                        'type': 'file',
+                        'path': log_path,
+                        'name': f'{db["name"]} Logs'
+                    })
+    
+    def add_middleware_logs_source(self):
+        """Add middleware logs"""
+        middleware_logs = [
+            '/var/log/tomcat/*.log',
+            '/var/log/jenkins/jenkins.log',
+            '/var/log/rabbitmq/*.log',
+        ]
+        
+        for log_path in middleware_logs:
+            if os.path.exists(log_path) or '*' in log_path:
+                self.log_sources.append({
+                    'type': 'file',
+                    'path': log_path,
+                    'name': f'Middleware Logs: {os.path.basename(log_path)}'
+                })
+    
+    def add_auth_logs_source(self):
+        """Add authentication logs"""
+        if platform.system() == "Windows":
+            self.log_sources.append({
+                'type': 'command',
+                'command': 'wevtutil qe Security /rd:true /c:50 /f:text /q:"*[System[(EventID=4624 or EventID=4625 or EventID=4634)]]"',
+                'name': 'Windows Authentication Logs'
+            })
+        else:
+            self.log_sources.extend([
+                {'type': 'file', 'path': '/var/log/auth.log', 'name': 'Authentication Logs'},
+                {'type': 'file', 'path': '/var/log/secure', 'name': 'Security Logs'},
+                {'type': 'command', 'command': 'last -20', 'name': 'Recent Logins'},
+            ])
+    
+    def add_audit_logs_source(self):
+        """Add audit logs"""
+        if platform.system() != "Windows":
+            self.log_sources.extend([
+                {'type': 'file', 'path': '/var/log/audit/audit.log', 'name': 'Audit Logs'},
+                {'type': 'command', 'command': 'ausearch -m all -ts today | head -20', 'name': 'Audit Events Today'},
+            ])
+    
+    def add_ids_ips_logs_source(self):
+        """Add IDS/IPS logs"""
+        ids_logs = [
+            '/var/log/snort/alert',
+            '/var/log/suricata/*.json',
+            '/var/log/guardian.log',
+        ]
+        
+        for log_path in ids_logs:
+            if os.path.exists(log_path) or '*' in log_path:
+                self.log_sources.append({
+                    'type': 'file',
+                    'path': log_path,
+                    'name': f'IDS/IPS Logs: {os.path.basename(log_path)}'
+                })
+    
+    def add_firewall_logs_source(self):
+        """Add firewall logs"""
+        if platform.system() == "Windows":
+            self.log_sources.append({
+                'type': 'command',
+                'command': 'netsh advfirewall show currentprofile | findstr "Setting"',
+                'name': 'Windows Firewall Status'
+            })
+        else:
+            self.log_sources.extend([
+                {'type': 'command', 'command': 'iptables -L -n -v', 'name': 'IPTables Rules'},
+                {'type': 'file', 'path': '/var/log/ufw.log', 'name': 'UFW Firewall Logs'},
+                {'type': 'file', 'path': '/var/log/firewalld', 'name': 'Firewalld Logs'},
+            ])
+    
+    def add_antivirus_logs_source(self):
+        """Add antivirus logs"""
+        av_logs = [
+            '/var/log/clamav/clamav.log',
+            '/var/log/sophos/*.log',
+            'C:\\ProgramData\\Sophos\\*\\logs\\*.log',
+            '/var/log/avast/*.log',
+        ]
+        
+        for log_path in av_logs:
+            if os.path.exists(log_path) or '*' in log_path:
+                self.log_sources.append({
+                    'type': 'file',
+                    'path': log_path,
+                    'name': f'Antivirus Logs: {os.path.basename(log_path)}'
+                })
+    
+    def add_network_logs_source(self):
+        """Add network infrastructure logs"""
+        self.log_sources.extend([
+            {'type': 'command', 'command': 'netstat -tuln', 'name': 'Network Connections'},
+            {'type': 'command', 'command': 'ss -tuln', 'name': 'Socket Statistics'},
+        ])
+    
+    def add_proxy_logs_source(self):
+        """Add proxy server logs"""
+        proxy_logs = [
+            '/var/log/squid/access.log',
+            '/var/log/tinyproxy/tinyproxy.log',
+        ]
+        
+        for log_path in proxy_logs:
+            if os.path.exists(log_path):
+                self.log_sources.append({
+                    'type': 'file',
+                    'path': log_path,
+                    'name': f'Proxy Logs: {os.path.basename(log_path)}'
+                })
+    
+    def add_router_switch_logs_source(self):
+        """Add router/switch logs (simulated)"""
+        # This would typically require SNMP or SSH access to network devices
+        self.log_sources.append({
+            'type': 'command',
+            'command': 'echo "Router/Switch logs require direct device access"',
+            'name': 'Network Device Logs'
+        })
+    
+    def add_vpn_logs_source(self):
+        """Add VPN logs"""
+        vpn_logs = [
+            '/var/log/openvpn/*.log',
+            '/var/log/ppp.log',
+        ]
+        
+        for log_path in vpn_logs:
+            if os.path.exists(log_path) or '*' in log_path:
+                self.log_sources.append({
+                    'type': 'file',
+                    'path': log_path,
+                    'name': f'VPN Logs: {os.path.basename(log_path)}'
+                })
+    
+    def add_dns_logs_source(self):
+        """Add DNS logs"""
+        dns_logs = [
+            '/var/log/named.log',
+            '/var/log/dnsmasq.log',
+            '/var/log/bind.log',
+        ]
+        
+        for log_path in dns_logs:
+            if os.path.exists(log_path):
+                self.log_sources.append({
+                    'type': 'file',
+                    'path': log_path,
+                    'name': f'DNS Logs: {os.path.basename(log_path)}'
+                })
+    
+    def add_container_logs_source(self):
+        """Add container logs"""
+        container_commands = [
+            {'command': 'docker ps -a', 'name': 'Docker Containers'},
+            {'command': 'docker logs $(docker ps -q) --tail 10 2>/dev/null', 'name': 'Docker Logs'},
+            {'command': 'kubectl get pods -A 2>/dev/null', 'name': 'Kubernetes Pods'},
+        ]
+        
+        for cmd in container_commands:
+            self.log_sources.append({
+                'type': 'command',
+                'command': cmd['command'],
+                'name': f'Container: {cmd["name"]}'
+            })
+    
+    def add_orchestration_logs_source(self):
+        """Add orchestration logs"""
+        self.log_sources.append({
+            'type': 'command',
+            'command': 'kubectl get events -A --sort-by=.lastTimestamp 2>/dev/null | tail -20',
+            'name': 'Kubernetes Events'
+        })
+    
+    def add_ci_cd_logs_source(self):
+        """Add CI/CD pipeline logs"""
+        ci_cd_logs = [
+            '/var/log/jenkins/jenkins.log',
+            '/var/log/gitlab/*.log',
+        ]
+        
+        for log_path in ci_cd_logs:
+            if os.path.exists(log_path) or '*' in log_path:
+                self.log_sources.append({
+                    'type': 'file',
+                    'path': log_path,
+                    'name': f'CI/CD Logs: {os.path.basename(log_path)}'
+                })
+    
+    def add_cloud_provider_logs_source(self):
+        """Add cloud provider logs (simulated)"""
+        cloud_logs = [
+            {'name': 'AWS CloudTrail', 'command': 'echo "AWS logs require AWS CLI configuration"'},
+            {'name': 'Azure Monitor', 'command': 'echo "Azure logs require Azure CLI configuration"'},
+            {'name': 'GCP Audit', 'command': 'echo "GCP logs require gcloud configuration"'},
+        ]
+        
+        for cloud in cloud_logs:
+            self.log_sources.append({
+                'type': 'command',
+                'command': cloud['command'],
+                'name': f'Cloud: {cloud["name"]}'
+            })
+    
+    def add_business_logs_source(self):
+        """Add business transaction logs (simulated)"""
+        # In a real scenario, these would come from specific business applications
+        self.log_sources.extend([
+            {
+                'type': 'command',
+                'command': 'echo "Business logs would come from CRM/ERP systems"',
+                'name': 'Business Transaction Logs'
+            },
+            {
+                'type': 'command', 
+                'command': 'echo "E-commerce logs require application-specific access"',
+                'name': 'E-commerce Logs'
+            },
+        ])
+    
+    def collect_from_pattern(self, pattern):
+        """Collect logs from file pattern"""
+        try:
+            logs = []
+            for file_path in glob.glob(pattern):
+                if os.path.isfile(file_path):
+                    try:
+                        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                            for i, line in enumerate(f):
+                                if i < 100:  # Limit lines per file
+                                    logs.append(f"{os.path.basename(file_path)}: {line.strip()}")
+                    except Exception as e:
+                        logs.append(f"Error reading {file_path}: {str(e)}")
+            return logs
+        except Exception as e:
+            return [f"Pattern collection error: {str(e)}"]
+    
+    def collect_all_logs(self):
+        """Collect logs from all configured sources"""
+        all_logs = []
+        successful_sources = 0
+        
+        for source in self.log_sources:
+            try:
+                logs = []
+                
+                if source['type'] == 'file':
+                    logs = self.collect_from_file(source['path'])
+                elif source['type'] == 'command':
+                    logs = self.collect_from_command(source['command'])
+                elif source['type'] == 'pattern':
+                    logs = self.collect_from_pattern(source['pattern'])
+                elif source['type'] == 'syslog':
+                    logs = self.collect_from_syslog(source.get('host', 'localhost'), 
+                                                   source.get('port', 514))
+                
+                if logs:
+                    source['status'] = 'active'
+                    source['log_count'] = len(logs)
+                    all_logs.extend(logs)
+                    successful_sources += 1
+                    logger.info(f"Collected {len(logs)} logs from {source['name']}")
+                else:
+                    source['status'] = 'inactive'
+                    source['log_count'] = 0
+                    
+            except Exception as e:
+                source['status'] = 'error'
+                source['log_count'] = 0
+                logger.error(f"Failed to collect from {source['name']}: {str(e)}")
+                all_logs.append(f"ERROR: Failed to collect from {source['name']}: {str(e)}")
+        
+        self.collected_logs = all_logs
+        logger.info(f"Collected {len(all_logs)} logs from {successful_sources}/{len(self.log_sources)} sources")
+        return all_logs
 
-        /* ========== METRIC CARDS ========== */
-        .metric-card {
-            background: rgba(255,255,255,0.06);
-            border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-            border: 1px solid rgba(56,189,248,0.3);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 8px 25px rgba(56,189,248,0.3);
-            transition: all 0.4s ease;
-            animation: staggerFade 1s ease forwards;
-            opacity: 0;
+class LogParser:
+    def __init__(self):
+        self.parsed_logs = []
+        # Enhanced log format patterns
+        self.log_patterns = {
+            "apache_combined": r'^(\S+) (\S+) (\S+) \[([^]]+)\] "(\S+) ([^"]+) (\S+)" (\d+) (\d+) "([^"]*)" "([^"]*)"',
+            "apache_common": r'^(\S+) (\S+) (\S+) \[([^]]+)\] "([^"]*)" (\d+) (\d+)',
+            "nginx": r'^(\S+) - (\S+) \[([^]]+)\] "(\S+) ([^"]+) (\S+)" (\d+) (\d+) "([^"]*)" "([^"]*)" (\S+)',
+            "mysql": r'^(\d{6}\s+\d{1,2}:\d{2}:\d{2})\s+(\d+)\s+(\S+)\s+(.*)',
+            "postgresql": r'^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+ \S+) (.*)',
+            "syslog": r'^(\w{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2})\s+(\S+)\s+(.*)',
+            "auth": r'^(\w{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2})\s+(\S+)\s+(.*)',
+            "docker": r'^(\S+)\s+(\S+)\s+(.*)',
+            "kubernetes": r'^(\S+)\s+(\S+)\s+(\S+)\s+(.*)',
+            "json": r'^{.*}$',
         }
-        @keyframes staggerFade {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .metric-card:hover {
-            transform: perspective(600px) rotateX(6deg) rotateY(-6deg) scale(1.05);
-            box-shadow: 0 0 40px rgba(56,189,248,0.8);
-        }
-        .metric-card h3 {
-            font-size: 2.5rem;
-            color: #38bdf8;
-            text-shadow: 0 0 15px #38bdf8;
-            animation: pulseGlow 2.5s infinite;
-        }
-        @keyframes pulseGlow {
-            0% { text-shadow: 0 0 10px #38bdf8; }
-            50% { text-shadow: 0 0 30px #38bdf8; }
-            100% { text-shadow: 0 0 10px #38bdf8; }
-        }
+    
+    def parse_all_logs(self, log_lines):
+        """Parse multiple log lines"""
+        parsed_logs = []
+        for log_line in log_lines:
+            parsed_log = self.parse_log(log_line)
+            parsed_logs.append(parsed_log)
+        return parsed_logs
+    
+    def parse_log(self, log_line):
+        """Parse a single log line using appropriate parser based on format detection"""
+        format_detected = self.detect_format_enhanced(log_line)
+        
+        if format_detected == 'json':
+            return self.parse_json_log(log_line)
+        elif format_detected == 'apache_combined' or format_detected == 'apache_common':
+            return self.parse_apache_log(log_line)
+        elif format_detected == 'docker':
+            return self.parse_docker_log(log_line)
+        elif format_detected == 'kubernetes':
+            return self.parse_kubernetes_log(log_line)
+        elif format_detected == 'auth':
+            return self.parse_auth_log(log_line)
+        else:
+            # Default fallback parser
+            return {
+                'format': format_detected,
+                'raw_message': log_line,
+                'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'message': log_line
+            }
+    
+    def detect_format_enhanced(self, log_line):
+        """Enhanced log format detection"""
+        # Check for JSON format first
+        if log_line.strip().startswith('{') and log_line.strip().endswith('}'):
+            try:
+                json.loads(log_line)
+                return 'json'
+            except:
+                pass
+        
+        # Check specific patterns
+        for format_name, pattern in self.log_patterns.items():
+            if re.search(pattern, log_line):
+                return format_name
+        
+        # Heuristic detection
+        if any(x in log_line for x in ['GET', 'POST', 'PUT', 'DELETE', 'HTTP/']):
+            if 'Apache' in log_line or 'apache' in log_line.lower():
+                return 'apache_combined'
+            return 'web_access'
+        
+        if any(x in log_line.lower() for x in ['error', 'warning', 'info', 'debug']):
+            return 'application'
+        
+        if any(x in log_line.lower() for x in ['failed password', 'accepted password', 'authentication']):
+            return 'auth'
+        
+        if any(x in log_line.lower() for x in ['docker', 'container', 'image']):
+            return 'docker'
+        
+        if any(x in log_line.lower() for x in ['pod', 'deployment', 'service', 'kube']):
+            return 'kubernetes'
+        
+        return 'unknown'
+    
+    def parse_apache_log(self, log_line):
+        """Parse Apache log format"""
+        for fmt in ['apache_combined', 'apache_common']:
+            match = re.match(self.log_patterns[fmt], log_line)
+            if match:
+                return {
+                    'format': fmt,
+                    'remote_host': match.group(1),
+                    'client_ident': match.group(2),
+                    'user_id': match.group(3),
+                    'timestamp': match.group(4),
+                    'method': match.group(5) if fmt == 'apache_combined' else None,
+                    'request': match.group(6) if fmt == 'apache_combined' else match.group(5),
+                    'protocol': match.group(7) if fmt == 'apache_combined' else None,
+                    'status_code': match.group(8) if fmt == 'apache_combined' else match.group(6),
+                    'size': match.group(9) if fmt == 'apache_combined' else match.group(7),
+                    'referer': match.group(10) if fmt == 'apache_combined' else None,
+                    'user_agent': match.group(11) if fmt == 'apache_combined' else None,
+                    'raw_message': log_line
+                }
+        return {'raw_message': log_line, 'format': 'apache'}
+    
+    def parse_json_log(self, log_line):
+        """Parse JSON format logs"""
+        try:
+            log_data = json.loads(log_line)
+            return {
+                'format': 'json',
+                'timestamp': log_data.get('timestamp', log_data.get('time', '')),
+                'level': log_data.get('level', log_data.get('severity', '')),
+                'message': log_data.get('message', log_line),
+                'logger': log_data.get('logger', ''),
+                'thread': log_data.get('thread', ''),
+                'raw_message': log_line,
+                **log_data  # Include all other fields
+            }
+        except:
+            return {'raw_message': log_line, 'format': 'json_invalid'}
+    
+    def parse_docker_log(self, log_line):
+        """Parse Docker container logs"""
+        # Docker logs often have format: TIMESTAMP CONTAINER_NAME MESSAGE
+        parts = log_line.split(' ', 2)
+        if len(parts) >= 3:
+            return {
+                'format': 'docker',
+                'timestamp': parts[0],
+                'container': parts[1],
+                'message': parts[2],
+                'raw_message': log_line
+            }
+        return {'raw_message': log_line, 'format': 'docker'}
+    
+    def parse_kubernetes_log(self, log_line):
+        """Parse Kubernetes logs"""
+        # K8s logs format: TIMESTAMP LEVEL SOURCE MESSAGE
+        parts = log_line.split(' ', 3)
+        if len(parts) >= 4:
+            return {
+                'format': 'kubernetes',
+                'timestamp': parts[0],
+                'level': parts[1],
+                'source': parts[2],
+                'message': parts[3],
+                'raw_message': log_line
+            }
+        return {'raw_message': log_line, 'format': 'kubernetes'}
+    
+    def parse_auth_log(self, log_line):
+        """Parse authentication logs"""
+        # Common auth log patterns
+        if 'Failed password' in log_line:
+            return {
+                'format': 'auth',
+                'event_type': 'failed_login',
+                'message': log_line,
+                'raw_message': log_line
+            }
+        elif 'Accepted password' in log_line:
+            return {
+                'format': 'auth',
+                'event_type': 'successful_login',
+                'message': log_line,
+                'raw_message': log_line
+            }
+        elif 'authentication failure' in log_line.lower():
+            return {
+                'format': 'auth',
+                'event_type': 'auth_failure',
+                'message': log_line,
+                'raw_message': log_line
+            }
+        
+        return {'raw_message': log_line, 'format': 'auth'}
 
-        /* ========== CHARTS / DATA PANELS ========== */
-        .stDataFrame, .stPlotlyChart, .stDeckGlJsonChart {
-            border-radius: 18px !important;
-            overflow: hidden;
-            border: 1px solid rgba(148,163,184,0.4);
-            box-shadow: 0 0 30px rgba(56,189,248,0.5);
-            animation: fadeSlideUp 1.2s ease;
-        }
 
-        /* ========== EXPANDERS ========== */
-        details {
-            background: rgba(30,41,59,0.7);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(56,189,248,0.4);
-            transition: all 0.3s ease;
-            animation: fadeSlideUp 1.4s ease;
-        }
-        details[open] {
-            box-shadow: 0 0 25px rgba(56,189,248,0.6);
-        }
+def generate_detailed_log_report(collected_logs, parsed_logs, detected_ttps, analysis_duration):
+    """
+    Generate a comprehensive, professional log analysis report
+    """
+    report = []
+    
+    # Report Header
+    report.append("=" * 80)
+    report.append("                   COMPREHENSIVE LOG ANALYSIS REPORT")
+    report.append("=" * 80)
+    report.append(f"Report Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    report.append(f"Analysis Duration: {analysis_duration}")
+    report.append("=" * 80)
+    report.append("")
+    
+    # Executive Summary
+    report.append("EXECUTIVE SUMMARY")
+    report.append("-" * 40)
+    report.append(f"Total Log Entries Processed: {len(collected_logs)}")
+    report.append(f"Successfully Parsed Entries: {len(parsed_logs)}")
+    report.append(f"Threat Patterns Detected: {len(detected_ttps)}")
+    
+    # Calculate parsing success rate
+    if collected_logs:
+        parsing_success_rate = (len(parsed_logs) / len(collected_logs)) * 100
+        report.append(f"Parsing Success Rate: {parsing_success_rate:.2f}%")
+    report.append("")
+    
+    # Log Source Analysis
+    report.append("LOG SOURCE ANALYSIS")
+    report.append("-" * 40)
+    
+    # Count log sources/types
+    source_counts = {}
+    format_counts = {}
+    
+    for log in parsed_logs:
+        log_format = log.get('format', 'unknown')
+        format_counts[log_format] = format_counts.get(log_format, 0) + 1
+        
+        # Extract source information based on format
+        if log_format == 'syslog':
+            source = log.get('hostname', 'unknown')
+            source_counts[source] = source_counts.get(source, 0) + 1
+        elif log_format == 'windows_event':
+            source = log.get('source', 'unknown')
+            source_counts[source] = source_counts.get(source, 0) + 1
+        elif log_format == 'apache' or log_format == 'iis':
+            source = 'Web Server'
+            source_counts[source] = source_counts.get(source, 0) + 1
+        else:
+            source = log_format
+            source_counts[source] = source_counts.get(source, 0) + 1
+    
+    report.append("Log Sources by Volume:")
+    for source, count in sorted(source_counts.items(), key=lambda x: x[1], reverse=True):
+        report.append(f"  {source}: {count} entries")
+    
+    report.append("")
+    report.append("Log Formats Distribution:")
+    for fmt, count in sorted(format_counts.items(), key=lambda x: x[1], reverse=True):
+        report.append(f"  {fmt}: {count} entries")
+    report.append("")
+    
+    # TTP Detection Details
+    if detected_ttps:
+        report.append("THREAT DETECTION RESULTS")
+        report.append("-" * 40)
+        
+        # Group TTPs by type and severity
+        ttp_by_type = {}
+        ttp_by_severity = {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0}
+        
+        for ttp in detected_ttps:
+            ttp_id = ttp['ttp_id']
+            severity = ttp['severity']
+            
+            if ttp_id not in ttp_by_type:
+                ttp_by_type[ttp_id] = {
+                    'count': 0,
+                    'name': ttp['ttp_name'],
+                    'severity': severity,
+                    'examples': []
+                }
+            
+            ttp_by_type[ttp_id]['count'] += 1
+            ttp_by_severity[severity] = ttp_by_severity.get(severity, 0) + 1
+            
+            # Keep up to 3 examples per TTP
+            if len(ttp_by_type[ttp_id]['examples']) < 3:
+                log_msg = ttp['log_entry'].get('message', '') or ttp['log_entry'].get('raw_message', '')
+                if len(log_msg) > 100:
+                    log_msg = log_msg[:100] + "..."
+                ttp_by_type[ttp_id]['examples'].append({
+                    'timestamp': ttp['timestamp'],
+                    'message': log_msg
+                })
+        
+        report.append("Threat Distribution by Severity:")
+        for severity, count in ttp_by_severity.items():
+            if count > 0:
+                report.append(f"  {severity}: {count} detections")
+        
+        report.append("")
+        report.append("Detailed Threat Analysis:")
+        
+        for ttp_id, ttp_info in sorted(ttp_by_type.items(), 
+                                      key=lambda x: (x[1]['severity'], x[1]['count']), 
+                                      reverse=True):
+            severity_icon = "🔴" if ttp_info['severity'] == 'Critical' else \
+                           "🟠" if ttp_info['severity'] == 'High' else \
+                           "🟡" if ttp_info['severity'] == 'Medium' else "🟢"
+            
+            report.append(f"{severity_icon} {ttp_id}: {ttp_info['name']} ({ttp_info['count']} occurrences)")
+            report.append(f"    Severity: {ttp_info['severity']}")
+            
+            for i, example in enumerate(ttp_info['examples'], 1):
+                report.append(f"    Example {i}: {example['timestamp']} - {example['message']}")
+            
+            report.append("")
+    else:
+        report.append("THREAT DETECTION RESULTS")
+        report.append("-" * 40)
+        report.append("No threat patterns detected in the analyzed logs.")
+        report.append("")
+    
+    # Security Recommendations
+    report.append("SECURITY RECOMMENDATIONS")
+    report.append("-" * 40)
+    
+    if detected_ttps:
+        # Generate recommendations based on detected TTPs
+        detected_ttp_ids = set(incident['ttp_id'] for incident in detected_ttps)
+        
+        for ttp_id in detected_ttp_ids:
+            ttp_info = TTP_DATABASE.get(ttp_id, {})
+            ttp_name = ttp_info.get('name', 'Unknown TTP')
+            
+            report.append(f"For {ttp_id} ({ttp_name}):")
+            
+            # Specific recommendations based on TTP type
+            if "Credential" in ttp_name:
+                report.append("  • Review and strengthen credential management practices")
+                report.append("  • Implement multi-factor authentication where possible")
+                report.append("  • Monitor for unusual account activities")
+                report.append("  • Regularly rotate credentials and service accounts")
+            elif "Command" in ttp_name or "Scripting" in ttp_name:
+                report.append("  • Implement application whitelisting")
+                report.append("  • Monitor command line activities")
+                report.append("  • Restrict scripting interpreter usage")
+                report.append("  • Enable PowerShell logging and monitoring")
+            elif "Protocol" in ttp_name:
+                report.append("  • Review network traffic patterns")
+                report.append("  • Implement network segmentation")
+                report.append("  • Monitor for unusual protocol usage")
+                report.append("  • Consider implementing TLS inspection")
+            elif "Brute Force" in ttp_name:
+                report.append("  • Implement account lockout policies")
+                report.append("  • Use strong password policies")
+                report.append("  • Monitor for failed authentication attempts")
+                report.append("  • Consider implementing CAPTCHA for web applications")
+            elif "Exploit" in ttp_name:
+                report.append("  • Keep all software updated with security patches")
+                report.append("  • Implement web application firewalls")
+                report.append("  • Conduct regular vulnerability assessments")
+                report.append("  • Follow secure coding practices")
+            else:
+                report.append("  • Review relevant security controls")
+                report.append("  • Monitor for similar activities")
+                report.append("  • Consider implementing additional logging")
+            
+            report.append("")
+        
+        report.append("General Recommendations:")
+        report.append("  • Establish a baseline of normal activity for comparison")
+        report.append("  • Implement a SIEM solution for centralized log management")
+        report.append("  • Regularly review and update detection rules")
+        report.append("  • Conduct periodic security awareness training")
+        report.append("  • Perform regular incident response drills")
+    else:
+        report.append("No specific recommendations based on TTP detection.")
+        report.append("Maintain current security monitoring practices and regularly review logs.")
+    
+    report.append("")
+    
+    # Log Collection Health
+    report.append("LOG COLLECTION HEALTH")
+    report.append("-" * 40)
+    
+    # Check for parsing errors or issues
+    unknown_format_count = format_counts.get('unknown', 0)
+    if unknown_format_count > 0:
+        report.append(f"⚠️  Warning: {unknown_format_count} log entries could not be parsed (unknown format)")
+    
+    # Check if we have diverse log sources
+    if len(source_counts) < 2:
+        report.append("ℹ️  Consider adding more log sources for comprehensive monitoring")
+    
+    # Check log volume
+    if len(collected_logs) < 100:
+        report.append("ℹ️  Low log volume detected - ensure all relevant sources are configured")
+    elif len(collected_logs) > 10000:
+        report.append("ℹ️  High log volume detected - consider log rotation and retention policies")
+    
+    report.append("")
+    
+    # Appendices
+    report.append("APPENDICES")
+    report.append("-" * 40)
+    report.append("A. TTP Reference")
+    
+    for ttp_id, ttp_info in TTP_DATABASE.items():
+        report.append(f"  {ttp_id}: {ttp_info['name']} - {ttp_info.get('description', 'No description available')}")
+    
+    report.append("")
+    report.append("B. Log Source Configuration")
+    for i, source in enumerate(log_collector.log_sources):
+        source_name = source.get('name', f"Source {i+1}")
+        source_type = source.get('type', 'unknown')
+        source_status = source.get('status', 'unknown')
+        
+        if source_type == 'file':
+            source_path = source.get('path', 'N/A')
+            report.append(f"  {source_name}: {source_type} ({source_path}) - Status: {source_status}")
+        elif source_type == 'command':
+            source_cmd = source.get('command', 'N/A')
+            report.append(f"  {source_name}: {source_type} ({source_cmd}) - Status: {source_status}")
+        else:
+            report.append(f"  {source_name}: {source_type} - Status: {source_status}")
+    
+    report.append("")
+    report.append("C. Sample Log Entries")
+    report.append("  Recent log entries (first 5):")
+    for i, log in enumerate(collected_logs[:5]):
+        report.append(f"    {i+1}. {log}")
+    
+    report.append("")
+    report.append("=" * 80)
+    report.append("                   END OF REPORT")
+    report.append("=" * 80)
+    
+    return "\n".join(report)
 
-        /* ========== BUTTONS ========== */
-        button[kind="primary"] {
-            background: linear-gradient(90deg, #f43f5e, #6366f1, #0ea5e9);
-            border-radius: 14px;
-            border: none;
-            color: white;
-            font-weight: 800;
-            text-transform: uppercase;
-            padding: 0.6rem 1.2rem;
-            transition: all 0.35s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        button[kind="primary"]:hover {
-            background: linear-gradient(90deg, #0ea5e9, #22d3ee, #4ade80);
-            transform: translateY(-3px) scale(1.08);
-            box-shadow: 0 0 35px rgba(56,189,248,0.9);
-        }
-        button[kind="primary"]:active::after {
-            content: "";
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 0; height: 0;
-            background: rgba(255,255,255,0.5);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            animation: ripple 0.6s linear;
-        }
-        @keyframes ripple {
-            to { width: 200%; height: 200%; opacity: 0; }
-        }
-    </style>
-    """, unsafe_allow_html=True)
+
+
+# Update TTP database with more realistic patterns
+TTP_DATABASE = {
+    "T1003": {
+        "name": "OS Credential Dumping",
+        "patterns": [
+            r"lsass\.exe.*dump",
+            r"procdump.*lsass",
+            r"mimikatz",
+            r"sekurlsa::logonpasswords",
+            r"password.*dump",
+            r"credential.*extract"
+        ],
+        "severity": "High",
+        "description": "Attempts to dump or extract credentials from the operating system"
+    },
+    "T1059": {
+        "name": "Command and Scripting Interpreter",
+        "patterns": [
+            r"powershell.*-enc",
+            r"cmd\.exe.*/c",
+            r"wscript\.exe.*\.vbs",
+            r"bash.*-c",
+            r"python.*-c",
+            r"exec.*system",
+            r"runtime\.exec"
+        ],
+        "severity": "Medium",
+        "description": "Execution of commands through command and scripting interpreters"
+    },
+    "T1071": {
+        "name": "Application Layer Protocol",
+        "patterns": [
+            r"HTTP.*User-Agent.*(python|curl|wget)",
+            r"DNS.*exfiltration",
+            r"ICMP.*tunnel",
+            r"non-standard.*port",
+            r"protocol.*tunnel"
+        ],
+        "severity": "Medium",
+        "description": "Use of application layer protocols for communication"
+    },
+    "T1078": {
+        "name": "Valid Accounts",
+        "patterns": [
+            r"failed.*password",
+            r"invalid.*user",
+            r"authentication.*failure",
+            r"brute.*force",
+            r"multiple.*login.*attempts"
+        ],
+        "severity": "Medium",
+        "description": "Use of valid accounts to evade security controls"
+    },
+    "T1082": {
+        "name": "System Information Discovery",
+        "patterns": [
+            r"systeminfo",
+            r"whoami",
+            r"hostname",
+            r"uname.*-a",
+            r"proc.*version",
+            r"environment.*variable"
+        ],
+        "severity": "Low",
+        "description": "Discovery of system information to aid in targeting"
+    },
+    "T1110": {
+        "name": "Brute Force",
+        "patterns": [
+            r"multiple.*failed.*logins",
+            r"brute.*force",
+            r"password.*spray",
+            r"dictionary.*attack",
+            r"authentication.*attempts"
+        ],
+        "severity": "High",
+        "description": "Attempting to guess passwords through brute force techniques"
+    },
+    "T1190": {
+        "name": "Exploit Public-Facing Application",
+        "patterns": [
+            r"sql.*injection",
+            r"xss",
+            r"cross.*site.*scripting",
+            r"remote.*code.*execution",
+            r"buffer.*overflow"
+        ],
+        "severity": "High",
+        "description": "Exploitation of vulnerabilities in public-facing applications"
+    },
+    "T1560": {
+        "name": "Archive Collected Data",
+        "patterns": [
+            r"tar.*-cf",
+            r"zip.*-r",
+            r"7z.*a",
+            r"rar.*a",
+            r"gzip",
+            r"compression.*tool"
+        ],
+        "severity": "Medium",
+        "description": "Archiving collected data prior to exfiltration"
+    },
+    "T1021": {
+        "name": "Remote Services",
+        "patterns": [
+            r"ssh.*-R",
+            r"rdp.*connection",
+            r"vnc.*connect",
+            r"psexec",
+            r"wmic.*/node"
+        ],
+        "severity": "Medium",
+        "description": "Use of remote services for lateral movement"
+    }
+}
+
+
+# Update log format patterns
+LOG_FORMATS = {
+    "syslog": r"<(\d+)>(\w{3}\s+\d+\s+\d+:\d+:\d+)\s+(\S+)\s+([^:]+):?\s*(.*)",
+    "apache": r'^(\S+) (\S+) (\S+) \[([^]]+)\] "([^"]*)" (\d+) (\d+) "([^"]*)" "([^"]*)"',
+    "iis": r'^(\S+) (\S+) (\S+) (\S+) (\d+) (\S+) (\S+) (\d+) (\d+) (\d+) (\S+)',
+    "windows": r'^(\w+)\s+(\d+)\s+(\d+:\d+:\d+)\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)\s+(.*)'
+}
+
+
+# Update log format patterns
+LOG_FORMATS = {
+    "syslog": r"<(\d+)>(\w{3}\s+\d+\s+\d+:\d+:\d+)\s+(\S+)\s+([^:]+):?\s*(.*)",
+    "apache": r'^(\S+) (\S+) (\S+) \[([^]]+)\] "([^"]*)" (\d+) (\d+) "([^"]*)" "([^"]*)"',
+    "iis": r'^(\S+) (\S+) (\S+) (\S+) (\d+) (\S+) (\S+) (\d+) (\d+) (\d+) (\S+)',
+    "windows": r'^(\w+)\s+(\d+)\s+(\d+:\d+:\d+)\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)\s+(.*)'
+}
+    
+class TTPScanner:
+    """Scan logs for TTP patterns"""
+    
+    def __init__(self):
+        self.detected_ttps = []
+    
+    def scan_for_ttp(self, parsed_logs):
+        """Scan parsed logs for TTP patterns"""
+        detected_incidents = []
+        
+        for log_entry in parsed_logs:
+            message = log_entry.get('message', '') or log_entry.get('raw_message', '')
+            
+            for ttp_id, ttp_info in TTP_DATABASE.items():
+                for pattern in ttp_info['patterns']:
+                    if re.search(pattern, message, re.IGNORECASE):
+                        detected_incidents.append({
+                            'ttp_id': ttp_id,
+                            'ttp_name': ttp_info['name'],
+                            'severity': ttp_info['severity'],
+                            'log_entry': log_entry,
+                            'matched_pattern': pattern,
+                            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        })
+                        break  # No need to check other patterns for same TTP
+        
+        self.detected_ttps = detected_incidents
+        return detected_incidents
+    
+    def generate_ttp_report(self):
+        """Generate a report of detected TTPs"""
+        if not self.detected_ttps:
+            return "No TTPs detected in the scanned logs."
+        
+        report = f"TTP Detection Report - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+        report += "=" * 50 + "\n\n"
+        
+        # Group by TTP ID
+        ttp_groups = {}
+        for incident in self.detected_ttps:
+            ttp_id = incident['ttp_id']
+            if ttp_id not in ttp_groups:
+                ttp_groups[ttp_id] = []
+            ttp_groups[ttp_id].append(incident)
+        
+        for ttp_id, incidents in ttp_groups.items():
+            ttp_info = TTP_DATABASE[ttp_id]
+            report += f"TTP: {ttp_id} - {ttp_info['name']} (Severity: {ttp_info['severity']})\n"
+            report += f"Occurrences: {len(incidents)}\n"
+            report += "-" * 30 + "\n"
+            
+            for i, incident in enumerate(incidents[:5]):  # Show first 5 occurrences
+                log_msg = incident['log_entry'].get('message', '') or incident['log_entry'].get('raw_message', '')
+                if len(log_msg) > 100:
+                    log_msg = log_msg[:100] + "..."
+                
+                report += f"{i+1}. {incident['timestamp']}: {log_msg}\n"
+            
+            if len(incidents) > 5:
+                report += f"... and {len(incidents) - 5} more occurrences\n"
+            
+            report += "\n"
+        
+        return report
+    
+log_collector = LogCollector()
+log_parser = LogParser()
+ttp_scanner = TTPScanner()
+
+
+def show_log_analysis():
+    """Enhanced Log Analysis Center with all log sources"""
+    st.header("📊 Advanced Log Analysis Center")
+    st.markdown("### Comprehensive SOC for Multi-Source Log Analysis")
+    
+    # Initialize session state
+    if 'log_collector' not in st.session_state:
+        st.session_state.log_collector = LogCollector()
+        st.session_state.log_collector.add_all_log_sources()
+    
+    if 'collected_logs' not in st.session_state:
+        st.session_state.collected_logs = []
+    
+    if 'parsed_logs' not in st.session_state:
+        st.session_state.parsed_logs = []
+    
+    log_collector = st.session_state.log_collector
+    
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+        "🔧 Configuration", "📥 Collection", "📊 Analysis", "🚨 Detection", 
+        "📈 Dashboard", "📋 Reporting"
+    ])
+    
+    with tab1:
+        st.subheader("Log Source Configuration")
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.write("**Available Log Sources**")
+            st.info(f"Total configured sources: {len(log_collector.log_sources)}")
+            
+            # Categorize sources
+            categories = {
+                'System': ['system', 'kernel', 'boot', 'driver'],
+                'Application': ['application', 'web', 'database', 'middleware'],
+                'Security': ['auth', 'audit', 'firewall', 'antivirus', 'ids'],
+                'Network': ['network', 'proxy', 'vpn', 'dns'],
+                'Cloud': ['container', 'orchestration', 'cloud'],
+                'Business': ['business', 'transaction']
+            }
+            
+            for category, keywords in categories.items():
+                with st.expander(f"{category} Log Sources"):
+                    category_sources = [
+                        s for s in log_collector.log_sources 
+                        if any(kw in s['name'].lower() for kw in keywords)
+                    ]
+                    
+                    for source in category_sources:
+                        status_color = "🟢" if source.get('status') == 'active' else "🔴" if source.get('status') == 'error' else "🟡"
+                        st.write(f"{status_color} {source['name']}")
+        
+        with col2:
+            st.write("**Management**")
+            
+            if st.button("🔄 Refresh All Sources", use_container_width=True):
+                log_collector.add_all_log_sources()
+                st.success("Sources refreshed!")
+            
+            if st.button("🗑️ Clear All Sources", use_container_width=True):
+                log_collector.log_sources = []
+                st.session_state.collected_logs = []
+                st.session_state.parsed_logs = []
+                st.success("Sources cleared!")
+            
+            st.write("**Add Custom Source**")
+            custom_type = st.selectbox("Type", ["file", "command", "pattern"])
+            custom_path = st.text_input("Path/Command/Pattern")
+            custom_name = st.text_input("Name")
+            
+            if st.button("Add Custom Source"):
+                if custom_path and custom_name:
+                    log_collector.log_sources.append({
+                        'type': custom_type,
+                        'path' if custom_type == 'file' else 'command' if custom_type == 'command' else 'pattern': custom_path,
+                        'name': custom_name,
+                        'status': 'inactive'
+                    })
+                    st.success("Custom source added!")
+    
+    with tab2:
+        st.subheader("Log Collection")
+        
+        col1, col2, col3 = st.columns([2, 1, 1])
+        
+        with col1:
+            st.write("**Collection Controls**")
+            
+            if st.button("🚀 Collect All Logs", use_container_width=True):
+                with st.spinner("Collecting logs from all sources..."):
+                    collected_logs = log_collector.collect_all_logs()
+                    st.session_state.collected_logs = collected_logs
+                    
+                    # Parse logs automatically
+                    parsed_logs = log_parser.parse_all_logs(collected_logs)
+                    st.session_state.parsed_logs = parsed_logs
+                    
+                    st.success(f"Collected {len(collected_logs)} log entries from {sum(1 for s in log_collector.log_sources if s.get('status') == 'active')} sources")
+        
+        with col2:
+            st.write("**Real-time Monitoring**")
+            real_time = st.checkbox("Enable Real-time", value=False)
+            
+            if real_time:
+                st.info("Real-time monitoring active")
+                # Auto-refresh every 30 seconds
+                time.sleep(30)
+                st.rerun()
+        
+        with col3:
+            st.write("**Collection Stats**")
+            active_sources = sum(1 for s in log_collector.log_sources if s.get('status') == 'active')
+            st.metric("Active Sources", active_sources)
+            st.metric("Total Logs", len(st.session_state.collected_logs))
+        
+        # Display source status
+        st.subheader("Source Status")
+        status_df = pd.DataFrame([
+            {
+                'Source': s['name'],
+                'Type': s['type'],
+                'Status': s.get('status', 'unknown'),
+                'Log Count': s.get('log_count', 0)
+            }
+            for s in log_collector.log_sources
+        ])
+        
+        if not status_df.empty:
+            st.dataframe(status_df, use_container_width=True)
+        
+        # Show sample logs
+        if st.session_state.collected_logs:
+            with st.expander("View Sample Logs (First 50)"):
+                for i, log in enumerate(st.session_state.collected_logs[:50]):
+                    st.code(log, language="log")
+    
+    with tab3:
+        show_enhanced_log_analysis(st.session_state.parsed_logs)
+    
+    with tab4:
+        show_enhanced_threat_detection(st.session_state.parsed_logs)
+    
+    with tab5:
+        show_log_analytics_dashboard(st.session_state.parsed_logs, log_collector.log_sources)
+    
+    with tab6:
+        show_comprehensive_reporting(st.session_state.collected_logs, 
+                                   st.session_state.parsed_logs, 
+                                   log_collector.log_sources)
+
+
+def show_log_analytics_dashboard(parsed_logs, log_sources):
+    """Enhanced analytics dashboard"""
+    st.header("📈 Advanced Log Analytics Dashboard")
+    
+    if not parsed_logs:
+        st.info("No data available for dashboard. Please collect logs first.")
+        return
+    
+    # KPI Metrics
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        total_logs = len(parsed_logs)
+        st.metric("Total Logs", total_logs)
+    
+    with col2:
+        error_logs = sum(1 for log in parsed_logs if 'error' in str(log.get('level', '')).lower())
+        st.metric("Error Logs", error_logs)
+    
+    with col3:
+        warning_logs = sum(1 for log in parsed_logs if 'warn' in str(log.get('level', '')).lower())
+        st.metric("Warning Logs", warning_logs)
+    
+    with col4:
+        active_sources = sum(1 for s in log_sources if s.get('status') == 'active')
+        st.metric("Active Sources", active_sources)
+    
+    # Log Level Distribution
+    st.subheader("Log Level Distribution")
+    
+    level_counts = {}
+    for log in parsed_logs:
+        level = log.get('level', 'INFO').upper()
+        if level not in ['ERROR', 'WARN', 'INFO', 'DEBUG']:
+            level = 'OTHER'
+        level_counts[level] = level_counts.get(level, 0) + 1
+    
+    if level_counts:
+        level_df = pd.DataFrame({
+            'Level': list(level_counts.keys()),
+            'Count': list(level_counts.values())
+        })
+        
+        col1, col2 = st.columns([1, 2])
+        
+        with col1:
+            st.dataframe(level_df, use_container_width=True)
+        
+        with col2:
+            fig = px.bar(level_df, x='Level', y='Count', 
+                        title="Log Level Distribution",
+                        color='Level')
+            st.plotly_chart(fig, use_container_width=True)
+    
+    # Source Performance
+    st.subheader("Source Performance")
+    
+    source_stats = []
+    for source in log_sources:
+        source_stats.append({
+            'Source': source['name'],
+            'Type': source['type'],
+            'Status': source.get('status', 'unknown'),
+            'Log Count': source.get('log_count', 0)
+        })
+    
+    if source_stats:
+        source_df = pd.DataFrame(source_stats)
+        
+        # Active sources only
+        active_sources_df = source_df[source_df['Status'] == 'active']
+        
+        if not active_sources_df.empty:
+            fig = px.bar(active_sources_df.nlargest(10, 'Log Count'), 
+                        x='Source', y='Log Count',
+                        title="Top 10 Sources by Log Volume")
+            st.plotly_chart(fig, use_container_width=True)
+    
+    # Real-time Monitoring Panel
+    st.subheader("Real-time Monitoring")
+    
+    # Simulate real-time updates
+    if st.button("Refresh Dashboard"):
+        st.rerun()
+    
+    # Security Posture Overview
+    st.subheader("Security Posture Overview")
+    
+    # Calculate simple security score
+    security_indicators = {
+        'Authentication Events': sum(1 for log in parsed_logs if 'auth' in str(log.get('format', '')).lower()),
+        'Firewall Events': sum(1 for log in parsed_logs if 'firewall' in str(log.get('format', '')).lower()),
+        'Error Events': sum(1 for log in parsed_logs if 'error' in str(log.get('level', '')).lower()),
+        'Warning Events': sum(1 for log in parsed_logs if 'warn' in str(log.get('level', '')).lower()),
+    }
+    
+    security_df = pd.DataFrame({
+        'Indicator': list(security_indicators.keys()),
+        'Count': list(security_indicators.values())
+    })
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.write("**Security Indicators**")
+        st.dataframe(security_df, use_container_width=True)
+    
+    with col2:
+        # Simple security score calculation
+        total_events = sum(security_indicators.values())
+        error_ratio = security_indicators['Error Events'] / max(total_events, 1)
+        security_score = max(0, 100 - (error_ratio * 100))
+        
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number+delta",
+            value=security_score,
+            domain={'x': [0, 1], 'y': [0, 1]},
+            title={'text': "Security Score"},
+            gauge={'axis': {'range': [None, 100]},
+                  'bar': {'color': "darkblue"},
+                  'steps': [{'range': [0, 50], 'color': "red"},
+                           {'range': [50, 80], 'color': "yellow"},
+                           {'range': [80, 100], 'color': "green"}]}
+        ))
+        st.plotly_chart(fig, use_container_width=True)
+
+def show_enhanced_log_analysis(parsed_logs):
+    """Enhanced log analysis with categorization"""
+    st.subheader("Advanced Log Analysis")
+    
+    if not parsed_logs:
+        st.info("No parsed logs available. Please collect logs first.")
+        return
+    
+    # Categorize logs by type
+    log_categories = {
+        'Security': ['auth', 'audit', 'firewall', 'ids', 'antivirus'],
+        'Application': ['apache', 'nginx', 'mysql', 'postgresql', 'application', 'web'],
+        'System': ['syslog', 'kernel', 'boot', 'system', 'windows'],
+        'Network': ['network', 'proxy', 'dns', 'vpn'],
+        'Container': ['docker', 'kubernetes', 'container'],
+        'Cloud': ['cloud', 'aws', 'azure', 'gcp'],
+        'Business': ['business', 'transaction']
+    }
+    
+    # Create category counts
+    category_counts = {category: 0 for category in log_categories.keys()}
+    category_counts['Unknown'] = 0
+    
+    for log in parsed_logs:
+        log_format = log.get('format', 'unknown').lower()
+        categorized = False
+        
+        for category, keywords in log_categories.items():
+            if any(keyword in log_format for keyword in keywords):
+                category_counts[category] += 1
+                categorized = True
+                break
+        
+        if not categorized:
+            category_counts['Unknown'] += 1
+    
+    # Display category distribution
+    col1, col2 = st.columns([1, 2])
+    
+    with col1:
+        st.write("**Log Distribution by Category**")
+        category_df = pd.DataFrame({
+            'Category': list(category_counts.keys()),
+            'Count': list(category_counts.values())
+        })
+        st.dataframe(category_df, use_container_width=True)
+    
+    with col2:
+        fig = px.pie(category_df, values='Count', names='Category', 
+                    title="Log Category Distribution")
+        st.plotly_chart(fig, use_container_width=True)
+    
+    # Filter logs by category
+    st.subheader("Filtered Log Analysis")
+    
+    selected_category = st.selectbox("Select Category", 
+                                   ['All'] + list(log_categories.keys()) + ['Unknown'])
+    
+    if selected_category != 'All':
+        filtered_logs = []
+        for log in parsed_logs:
+            log_format = log.get('format', 'unknown').lower()
+            
+            if selected_category == 'Unknown':
+                if not any(any(keyword in log_format for keyword in keywords) 
+                          for keywords in log_categories.values()):
+                    filtered_logs.append(log)
+            else:
+                keywords = log_categories.get(selected_category, [])
+                if any(keyword in log_format for keyword in keywords):
+                    filtered_logs.append(log)
+    else:
+        filtered_logs = parsed_logs
+    
+    # Show filtered logs in a table
+    if filtered_logs:
+        st.write(f"**Showing {len(filtered_logs)} logs from {selected_category} category**")
+        
+        # Convert to DataFrame for better display
+        display_logs = []
+        for log in filtered_logs[:100]:  # Limit to first 100
+            display_logs.append({
+                'Format': log.get('format', 'unknown'),
+                'Timestamp': log.get('timestamp', ''),
+                'Level': log.get('level', ''),
+                'Message': log.get('message', log.get('raw_message', ''))[:100] + '...',
+                'Source': log.get('source', ''),
+                'Raw': log.get('raw_message', '')[:50] + '...'
+            })
+        
+        if display_logs:
+            st.dataframe(pd.DataFrame(display_logs), use_container_width=True)
+            
+            # Show detailed view for selected log
+            if len(filtered_logs) > 0:
+                selected_idx = st.slider("Select log to view details", 0, min(50, len(filtered_logs)-1), 0)
+                st.write("**Detailed Log View**")
+                st.json(filtered_logs[selected_idx])
+    else:
+        st.info(f"No logs found for category: {selected_category}")
+
+
+def show_comprehensive_reporting(collected_logs, parsed_logs, log_sources):
+    """Enhanced reporting functionality"""
+    st.header("📋 Comprehensive Reporting")
+    
+    if not collected_logs:
+        st.info("No logs available for reporting. Please collect logs first.")
+        return
+    
+    # Report Configuration
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        report_type = st.selectbox(
+            "Report Type",
+            ["Security Summary", "Operational Overview", "Compliance Audit", "Custom"]
+        )
+        
+        time_range = st.selectbox(
+            "Time Range",
+            ["Last Hour", "Last 24 Hours", "Last 7 Days", "Custom Range"]
+        )
+    
+    with col2:
+        include_details = st.checkbox("Include Detailed Logs", value=True)
+        export_format = st.selectbox("Export Format", ["PDF", "CSV", "HTML", "JSON"])
+    
+    # Generate Report
+    if st.button("Generate Report"):
+        with st.spinner("Generating comprehensive report..."):
+            
+            # Create report data
+            report_data = {
+                "metadata": {
+                    "generated_at": datetime.now().isoformat(),
+                    "report_type": report_type,
+                    "time_range": time_range,
+                    "total_logs": len(collected_logs),
+                    "total_sources": len(log_sources),
+                    "active_sources": sum(1 for s in log_sources if s.get('status') == 'active')
+                },
+                "summary": {
+                    "error_count": sum(1 for log in parsed_logs if 'error' in str(log.get('level', '')).lower()),
+                    "warning_count": sum(1 for log in parsed_logs if 'warn' in str(log.get('level', '')).lower()),
+                    "security_events": sum(1 for log in parsed_logs if any(x in str(log.get('format', '')).lower() 
+                                                                         for x in ['auth', 'firewall', 'audit'])),
+                },
+                "source_stats": [
+                    {
+                        "name": s['name'],
+                        "type": s['type'],
+                        "status": s.get('status', 'unknown'),
+                        "log_count": s.get('log_count', 0)
+                    }
+                    for s in log_sources
+                ]
+            }
+            
+            # Display report preview
+            st.subheader("Report Preview")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.write("**Executive Summary**")
+                st.json(report_data["metadata"])
+                
+                st.write("**Key Metrics**")
+                st.json(report_data["summary"])
+            
+            with col2:
+                st.write("**Source Statistics**")
+                source_df = pd.DataFrame(report_data["source_stats"])
+                st.dataframe(source_df, use_container_width=True)
+            
+            # Export functionality
+            st.subheader("Export Report")
+            
+            if export_format == "CSV":
+                # Create comprehensive CSV
+                csv_data = "Category,Metric,Value\n"
+                
+                # Add metadata
+                for key, value in report_data["metadata"].items():
+                    csv_data += f"Metadata,{key},{value}\n"
+                
+                # Add summary
+                for key, value in report_data["summary"].items():
+                    csv_data += f"Summary,{key},{value}\n"
+                
+                # Add source stats
+                for source in report_data["source_stats"]:
+                    csv_data += f"Source,{source['name']},Logs: {source['log_count']}, Status: {source['status']}\n"
+                
+                st.download_button(
+                    label="Download CSV Report",
+                    data=csv_data,
+                    file_name=f"log_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv"
+                )
+            
+            elif export_format == "JSON":
+                json_data = json.dumps(report_data, indent=2)
+                st.download_button(
+                    label="Download JSON Report",
+                    data=json_data,
+                    file_name=f"log_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                    mime="application/json"
+                )
+            
+            elif export_format == "HTML":
+                # Simple HTML report
+                html_content = f"""
+                <html>
+                <head>
+                    <title>Log Analysis Report</title>
+                    <style>
+                        body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                        .header {{ background-color: #f0f0f0; padding: 20px; }}
+                        .section {{ margin: 20px 0; }}
+                        table {{ border-collapse: collapse; width: 100%; }}
+                        th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                        th {{ background-color: #f2f2f2; }}
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Log Analysis Center Report</h1>
+                        <p>Generated: {report_data['metadata']['generated_at']}</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h2>Executive Summary</h2>
+                        <p>Total Logs: {report_data['metadata']['total_logs']}</p>
+                        <p>Active Sources: {report_data['metadata']['active_sources']}</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h2>Key Metrics</h2>
+                        <p>Error Count: {report_data['summary']['error_count']}</p>
+                        <p>Warning Count: {report_data['summary']['warning_count']}</p>
+                    </div>
+                </body>
+                </html>
+                """
+                
+                st.download_button(
+                    label="Download HTML Report",
+                    data=html_content,
+                    file_name=f"log_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html",
+                    mime="text/html"
+                )
+    
+    # Scheduled Reporting
+    st.subheader("Scheduled Reporting")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        schedule_frequency = st.selectbox(
+            "Frequency",
+            ["Daily", "Weekly", "Monthly", "Custom"]
+        )
+        
+        schedule_time = st.time_input("Schedule Time", value=datetime.now().time())
+    
+    with col2:
+        email_recipients = st.text_input("Email Recipients (comma-separated)")
+        enable_scheduling = st.checkbox("Enable Scheduled Reporting")
+    
+    if st.button("Save Schedule") and enable_scheduling:
+        st.success(f"Scheduled reporting configured: {schedule_frequency} at {schedule_time}")
+        if email_recipients:
+            st.info(f"Reports will be sent to: {email_recipients}")
+
+
+
+def show_enhanced_threat_detection(parsed_logs):
+    """Enhanced threat detection with TTP matching"""
+    st.subheader("Advanced Threat Detection")
+    
+    if not parsed_logs:
+        st.info("No parsed logs available for threat detection.")
+        return
+    
+    # TTP Detection
+    detected_threats = []
+    
+    for log in parsed_logs:
+        log_message = log.get('raw_message', log.get('message', ''))
+        
+        for ttp_id, ttp_info in TTP_DATABASE.items():
+            for pattern in ttp_info['patterns']:
+                if re.search(pattern, log_message, re.IGNORECASE):
+                    detected_threats.append({
+                        'TTP_ID': ttp_id,
+                        'TTP_Name': ttp_info['name'],
+                        'Severity': ttp_info['severity'],
+                        'Log_Message': log_message[:200] + '...',
+                        'Pattern': pattern,
+                        'Timestamp': log.get('timestamp', 'Unknown')
+                    })
+                    break  # Avoid duplicate detections for same TTP
+    
+    # Display threat detection results
+    if detected_threats:
+        st.error(f"🚨 {len(detected_threats)} potential threats detected!")
+        
+        # Group by severity
+        severity_counts = {}
+        for threat in detected_threats:
+            severity = threat['Severity']
+            severity_counts[severity] = severity_counts.get(severity, 0) + 1
+        
+        # Create columns for severity overview
+        cols = st.columns(len(severity_counts))
+        for idx, (severity, count) in enumerate(severity_counts.items()):
+            with cols[idx]:
+                if severity == "High":
+                    st.metric("High Severity", count, delta=count, delta_color="inverse")
+                elif severity == "Medium":
+                    st.metric("Medium Severity", count, delta=count)
+                else:
+                    st.metric("Low Severity", count, delta=count)
+        
+        # Show detailed threat table
+        st.subheader("Detected Threats")
+        threat_df = pd.DataFrame(detected_threats)
+        st.dataframe(threat_df, use_container_width=True)
+        
+        # Export threats
+        if st.button("Export Threat Report"):
+            csv = threat_df.to_csv(index=False)
+            st.download_button(
+                label="Download Threat Report CSV",
+                data=csv,
+                file_name="threat_report.csv",
+                mime="text/csv"
+            )
+    else:
+        st.success("✅ No threats detected in the current log set.")
+    
+    # Anomaly Detection
+    st.subheader("Anomaly Detection")
+    
+    # Simple anomaly detection based on log frequency
+    if len(parsed_logs) > 10:
+        # Count logs by minute (simplified)
+        timestamps = []
+        for log in parsed_logs:
+            ts = log.get('timestamp', '')
+            if ts:
+                timestamps.append(ts)
+        
+        if timestamps:
+            # Simple frequency analysis
+            st.info("Anomaly detection based on log frequency patterns")
+            
+            # Show log frequency over time (simplified)
+            freq_df = pd.DataFrame({'timestamp': timestamps[:100]})  # Limit for demo
+            freq_df['timestamp'] = pd.to_datetime(freq_df['timestamp'], errors='coerce')
+            freq_df = freq_df.dropna()
+            
+            if not freq_df.empty:
+                freq_df['time_window'] = freq_df['timestamp'].dt.floor('min')
+                freq_series = freq_df.groupby('time_window').size()
+                
+                fig = px.line(x=freq_series.index, y=freq_series.values,
+                            title="Log Frequency Over Time",
+                            labels={'x': 'Time', 'y': 'Log Count'})
+                st.plotly_chart(fig, use_container_width=True)
+
+
+
+
+def parse_all_logs(self, log_lines):
+    """Parse multiple log lines"""
+    parsed_logs = []
+    for log_line in log_lines:
+        parsed_log = self.parse_log(log_line)
+        parsed_logs.append(parsed_log)
+    return parsed_logs
+
+
+def get_realtime_system_logs():
+    """Get real-time system logs from actual log files - Fixed for Windows"""
+    realtime_logs = []
+    
+    try:
+        # Get system logs based on OS
+        if platform.system() == "Windows":
+            # Windows event logs - get recent entries using wevtutil
+            try:
+                # Get recent application logs
+                result = subprocess.run([
+                    'wevtutil', 'qe', 'Application', '/rd:true', '/c:5', '/f:text'
+                ], capture_output=True, text=True, timeout=5, creationflags=subprocess.CREATE_NO_WINDOW)
+                
+                if result.returncode == 0:
+                    for line in result.stdout.split('\n'):
+                        if line.strip():
+                            realtime_logs.append(f"Windows App: {line.strip()}")
+                
+                # Get recent system logs
+                result = subprocess.run([
+                    'wevtutil', 'qe', 'System', '/rd:true', '/c:5', '/f:text'
+                ], capture_output=True, text=True, timeout=5, creationflags=subprocess.CREATE_NO_WINDOW)
+                
+                if result.returncode == 0:
+                    for line in result.stdout.split('\n'):
+                        if line.strip():
+                            realtime_logs.append(f"Windows System: {line.strip()}")
+                    
+            except Exception as e:
+                realtime_logs.append(f"Windows log error: {str(e)}")
+                
+        else:
+            # Linux/Unix systems - tail recent log entries
+            log_files = [
+                '/var/log/syslog',
+                '/var/log/auth.log',
+                '/var/log/kern.log',
+                '/var/log/messages'
+            ]
+            
+            for log_file in log_files:
+                if os.path.exists(log_file):
+                    try:
+                        # Get last few lines of each log file
+                        result = subprocess.run(['tail', '-5', log_file], capture_output=True, text=True, timeout=5)
+                        if result.returncode == 0:
+                            for line in result.stdout.split('\n'):
+                                if line.strip():
+                                    realtime_logs.append(f"{os.path.basename(log_file)}: {line.strip()}")
+                    except Exception as e:
+                        realtime_logs.append(f"Error reading {log_file}: {str(e)}")
+        
+        # Add current system status logs
+        realtime_logs.append(f"System Status: CPU {psutil.cpu_percent()}%, Memory {psutil.virtual_memory().percent}%")
+        realtime_logs.append(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        
+    except Exception as e:
+        realtime_logs.append(f"Real-time log collection error: {str(e)}")
+    
+    return realtime_logs
+
+def generate_collection_report(collected_logs, parsed_logs):
+    """Generate a log collection summary report"""
+    report = f"Log Collection Report - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+    report += "=" * 50 + "\n\n"
+    
+    report += f"Total Log Entries Collected: {len(collected_logs)}\n"
+    report += f"Total Log Entries Parsed: {len(parsed_logs)}\n\n"
+    
+    # Format distribution
+    format_count = {}
+    for log in parsed_logs:
+        fmt = log.get('format', 'unknown')
+        format_count[fmt] = format_count.get(fmt, 0) + 1
+    
+    report += "Log Format Distribution:\n"
+    for fmt, count in format_count.items():
+        report += f"  {fmt}: {count} entries\n"
+    
+    # Source status
+    report += "\nLog Source Status:\n"
+    for i, source in enumerate(log_collector.log_sources):
+        report += f"  {i+1}. {source['type']}: {source.get('host', source.get('path_pattern', source.get('path', 'N/A')))} - {source.get('status', 'unknown')}\n"
+    
+    return report
+
+def generate_comprehensive_report(collected_logs, parsed_logs, detected_ttps):
+    """Generate a comprehensive security report"""
+    report = f"Comprehensive Security Report - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+    report += "=" * 60 + "\n\n"
+    
+    # Collection summary
+    report += "1. LOG COLLECTION SUMMARY\n"
+    report += "-" * 30 + "\n"
+    report += f"Total log entries collected: {len(collected_logs)}\n"
+    report += f"Total log entries parsed: {len(parsed_logs)}\n\n"
+    
+    # Format analysis
+    format_count = {}
+    for log in parsed_logs:
+        fmt = log.get('format', 'unknown')
+        format_count[fmt] = format_count.get(fmt, 0) + 1
+    
+    report += "Log format distribution:\n"
+    for fmt, count in format_count.items():
+        report += f"  {fmt}: {count} entries\n"
+    report += "\n"
+    
+    # TTP detection results
+    report += "2. TTP DETECTION RESULTS\n"
+    report += "-" * 30 + "\n"
+    
+    if detected_ttps:
+        ttp_groups = {}
+        for incident in detected_ttps:
+            ttp_id = incident['ttp_id']
+            if ttp_id not in ttp_groups:
+                ttp_groups[ttp_id] = []
+            ttp_groups[ttp_id].append(incident)
+        
+        report += f"Detected {len(detected_ttps)} potential TTP occurrences across {len(ttp_groups)} unique TTPs:\n\n"
+        
+        for ttp_id, incidents in ttp_groups.items():
+            ttp_info = TTP_DATABASE[ttp_id]
+            report += f"{ttp_id}: {ttp_info['name']} (Severity: {ttp_info['severity']})\n"
+            report += f"  Occurrences: {len(incidents)}\n"
+            
+            # Show a few examples
+            for i, incident in enumerate(incidents[:3]):
+                log_msg = incident['log_entry'].get('message', '') or incident['log_entry'].get('raw_message', '')
+                if len(log_msg) > 80:
+                    log_msg = log_msg[:80] + "..."
+                report += f"  {i+1}. {incident['timestamp']}: {log_msg}\n"
+            
+            if len(incidents) > 3:
+                report += f"  ... and {len(incidents) - 3} more occurrences\n"
+            report += "\n"
+    else:
+        report += "No TTP patterns detected in the analyzed logs.\n\n"
+    
+    # Recommendations
+    report += "3. SECURITY RECOMMENDATIONS\n"
+    report += "-" * 30 + "\n"
+    
+    if detected_ttps:
+        report += "Based on the detected TTP patterns, consider the following actions:\n\n"
+        
+        # Generate recommendations based on detected TTPs
+        detected_ttp_ids = set(incident['ttp_id'] for incident in detected_ttps)
+        for ttp_id in detected_ttp_ids:
+            ttp_info = TTP_DATABASE[ttp_id]
+            report += f"- For {ttp_id} ({ttp_info['name']}):\n"
+            
+            # Basic recommendations based on TTP type
+            if "Credential" in ttp_info['name']:
+                report += "  * Review and strengthen credential management practices\n"
+                report += "  * Implement multi-factor authentication where possible\n"
+                report += "  * Monitor for unusual account activities\n"
+            elif "Command" in ttp_info['name']:
+                report += "  * Implement application whitelisting\n"
+                report += "  * Monitor command line activities\n"
+                report += "  * Restrict scripting interpreter usage\n"
+            elif "Protocol" in ttp_info['name']:
+                report += "  * Review network traffic patterns\n"
+                report += "  * Implement network segmentation\n"
+                report += "  * Monitor for unusual protocol usage\n"
+            
+            report += "\n"
+    else:
+        report += "No specific recommendations based on TTP detection. Maintain current security monitoring practices.\n"
+    
+    report += "\n4. APPENDIX: LOG SOURCES\n"
+    report += "-" * 30 + "\n"
+    for i, source in enumerate(log_collector.log_sources):
+        report += f"Source {i+1}: {source['type']} - {source.get('host', source.get('path_pattern', source.get('path', 'N/A')))} - Status: {source.get('status', 'unknown')}\n"
+    
+    return report
 
 
 
@@ -228,10 +2226,13 @@ def main():
     # Sidebar navigation
     st.sidebar.title("🛡️ Laptop Security Center")
     
+
+    
     # Initialize page selection
     if 'current_page' not in st.session_state:
         st.session_state.current_page = "🖥️ System Overview"
 
+        
         
     
     # System Monitoring section
@@ -242,6 +2243,13 @@ def main():
         st.session_state.current_page = "🔍 Full System Scan"
     if st.sidebar.button("📊 Real-Time Monitoring", use_container_width=True):
         st.session_state.current_page = "📊 Real-Time Monitoring"
+
+    st.sidebar.markdown("### 📊 **Log Analysis**")
+    if st.sidebar.button("📋 Log Analysis Center", use_container_width=True):
+        st.session_state.current_page = "📋 Log Analysis Center"
+
+    
+    
 
     # AI Threat Detection section
     st.sidebar.markdown("### 🤖 **AI Threat Detection**")
@@ -274,8 +2282,8 @@ def main():
     if st.sidebar.button("📋 Alert Management", use_container_width=True):
         st.session_state.current_page = "📋 Alert Management"
         st.sidebar.markdown("### ☁ *Cloud Security*")
-    if st.sidebar.button("☁ Cloud Security Monitoring", use_container_width=True):
-        st.session_state.current_page = "☁ Cloud Security Monitoring"
+    #if st.sidebar.button("☁ Cloud Security Monitoring", use_container_width=True):
+       # st.session_state.current_page = "☁ Cloud Security Monitoring"
     
     
     
@@ -319,6 +2327,9 @@ def main():
         show_zero_day_detection()
     elif page == "📊 False Positive Analytics":
         show_false_positive_analytics()
+
+    elif page == "📋 Log Analysis Center":
+        show_log_analysis()
 
 def show_system_overview():
     """Main system overview dashboard"""
@@ -437,10 +2448,23 @@ def show_full_system_scan():
         # Display results
         show_scan_results(results)
 
+import streamlit as st
+import psutil
+import pandas as pd
+import plotly.express as px
+import time
+from datetime import datetime
+
 def show_real_time_monitoring():
     """Real-time system monitoring"""
     st.header("📊 Real-Time System Monitoring")
-    
+
+    # Initialize session state for histories
+    if "cpu_history" not in st.session_state:
+        st.session_state.cpu_history = []
+    if "net_history" not in st.session_state:
+        st.session_state.net_history = []
+
     # Auto-refresh controls
     col1, col2 = st.columns([3, 1])
     with col1:
@@ -448,51 +2472,84 @@ def show_real_time_monitoring():
     with col2:
         if st.button("🔄 Refresh Now"):
             st.rerun()
-    
-    # Real-time metrics
+
     col1, col2 = st.columns(2)
-    
+
+    # ===== Left Side: Performance =====
     with col1:
         st.subheader("📈 System Performance")
-        
-        # CPU usage over time (simulated)
-        cpu_data = []
-        for i in range(20):
-            cpu_data.append({
-                'time': datetime.now() - timedelta(seconds=i*5),
-                'cpu': psutil.cpu_percent()
-            })
-        
-        df_cpu = pd.DataFrame(cpu_data)
-        fig_cpu = px.line(df_cpu, x='time', y='cpu', title='CPU Usage (Last 100 seconds)')
+
+        # CPU Usage
+        cpu_percent = psutil.cpu_percent(interval=1)
+        st.session_state.cpu_history.append({
+            "time": datetime.now(),
+            "cpu": cpu_percent
+        })
+        st.session_state.cpu_history = st.session_state.cpu_history[-20:]
+        df_cpu = pd.DataFrame(st.session_state.cpu_history)
+        fig_cpu = px.line(df_cpu, x="time", y="cpu",
+                          title="CPU Usage (Last 100 seconds)", markers=True)
         st.plotly_chart(fig_cpu, use_container_width=True)
-        
-        # Memory usage
+
+        # Memory Usage
         memory = psutil.virtual_memory()
         fig_memory = px.pie(
             values=[memory.used, memory.available],
-            names=['Used', 'Available'],
-            title='Memory Usage'
+            names=["Used", "Available"],
+            title=f"Memory Usage ({memory.percent}%)"
         )
         st.plotly_chart(fig_memory, use_container_width=True)
-    
+
+        # Disk Usage
+        disk = psutil.disk_usage('/')
+        fig_disk = px.pie(
+            values=[disk.used, disk.free],
+            names=["Used", "Free"],
+            title=f"Disk Usage ({disk.percent}%)"
+        )
+        st.plotly_chart(fig_disk, use_container_width=True)
+
+    # ===== Right Side: Security / Network =====
     with col2:
-        st.subheader("🔒 Security Events")
-        
-        # Simulated security events
-        security_events = [
-            {"time": "11:45:23", "event": "🟢 Normal login detected", "severity": "Low"},
-            {"time": "11:44:15", "event": "🟡 New process started: chrome.exe", "severity": "Medium"},
-            {"time": "11:43:02", "event": "🟢 Firewall rule applied", "severity": "Low"},
-            {"time": "11:42:45", "event": "🔴 Suspicious network connection", "severity": "High"},
-            {"time": "11:41:30", "event": "🟡 File access: system32", "severity": "Medium"}
-        ]
-        
-        for event in security_events:
-            severity_color = {"Low": "🟢", "Medium": "🟡", "High": "🔴"}.get(event["severity"], "⚪")
-            st.write(f"**{event['time']}** {severity_color} {event['event']}")
-    
-    # Auto-refresh functionality
+        st.subheader("🔒 Security & Network Monitoring")
+
+        # Top Processes
+        processes = [(p.info["name"], p.info["cpu_percent"])
+                     for p in psutil.process_iter(["name", "cpu_percent"])]
+        df_proc = pd.DataFrame(processes, columns=["Process", "CPU %"])
+        df_proc = df_proc.sort_values("CPU %", ascending=False).head(5)
+        st.dataframe(df_proc, use_container_width=True)
+
+        if not df_proc.empty:
+            fig_proc = px.bar(df_proc, x="Process", y="CPU %",
+                              title="Top 5 CPU-Consuming Processes",
+                              text="CPU %", color="CPU %")
+            st.plotly_chart(fig_proc, use_container_width=True)
+
+        # Network I/O (bytes sent/recv)
+        net = psutil.net_io_counters()
+        st.session_state.net_history.append({
+            "time": datetime.now(),
+            "bytes_sent": net.bytes_sent,
+            "bytes_recv": net.bytes_recv
+        })
+        st.session_state.net_history = st.session_state.net_history[-20:]
+        df_net = pd.DataFrame(st.session_state.net_history)
+        fig_net = px.line(df_net, x="time", y=["bytes_sent", "bytes_recv"],
+                          title="Network Traffic (bytes sent/received)")
+        st.plotly_chart(fig_net, use_container_width=True)
+
+        # Active Connections
+        conns = psutil.net_connections(kind="inet")
+        conn_df = pd.DataFrame([{
+            "laddr": f"{c.laddr.ip}:{c.laddr.port}" if c.laddr else "",
+            "raddr": f"{c.raddr.ip}:{c.raddr.port}" if c.raddr else "",
+            "status": c.status
+        } for c in conns if c.raddr])
+        if not conn_df.empty:
+            st.dataframe(conn_df.head(10), use_container_width=True)
+
+    # ===== Auto refresh =====
     if auto_refresh:
         time.sleep(5)
         st.rerun()
@@ -3689,6 +5746,7 @@ def get_windows_services():
     try:
         import win32serviceutil
         import win32service
+
         
         # This is a simplified approach - in a real application, you'd use proper WMI queries
         service_list = []
@@ -7458,11 +9516,17 @@ def check_firewall_status():
         if platform.system() == "Windows":
             result = subprocess.run(['netsh', 'advfirewall', 'show', 'allprofiles'], 
                                   capture_output=True, text=True, timeout=10)
-            return "ON" in result.stdout
+            return 'State ON' in result.stdout
         else:
-            # For Linux/Mac, check iptables or ufw
-            result = subprocess.run(['which', 'ufw'], capture_output=True, timeout=5)
-            return result.returncode == 0
+            # Check for common Linux firewalls
+            try:
+                # Check ufw
+                result = subprocess.run(['ufw', 'status'], capture_output=True, text=True, timeout=5)
+                return 'Status: active' in result.stdout
+            except:
+                # Check iptables has rules
+                result = subprocess.run(['iptables', '-L', '-n'], capture_output=True, text=True, timeout=5)
+                return result.returncode == 0 and 'Chain INPUT' in result.stdout
     except:
         return False
 

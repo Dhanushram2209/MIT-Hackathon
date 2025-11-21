@@ -1,0 +1,324 @@
+2025-09-20 14:19:46,583 - azure.identity._credentials.environment - INFO - No environment configuration found.
+2025-09-20 14:19:46,602 - azure.identity._credentials.managed_identity - INFO - ManagedIdentityCredential will use IMDS
+2025-09-20 14:19:50,040 - azure.identity._credentials.environment - INFO - No environment configuration found.
+2025-09-20 14:19:50,042 - azure.identity._credentials.managed_identity - INFO - ManagedIdentityCredential will use IMDS
+2025-09-20 14:52:46,360 - SecurityScanner - INFO - Collected 2 system logs
+2025-09-20 14:52:46,361 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\System.evtx'
+2025-09-20 14:52:46,361 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 14:52:46,362 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Application.evtx'
+2025-09-20 14:52:46,362 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 14:52:46,362 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Security.evtx'
+2025-09-20 14:52:46,362 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:08:46,245 - SecurityScanner - INFO - Collected 2 system logs
+2025-09-20 15:08:46,247 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\System.evtx'
+2025-09-20 15:08:46,247 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:08:46,248 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Application.evtx'
+2025-09-20 15:08:46,248 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:08:46,249 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Security.evtx'
+2025-09-20 15:08:46,250 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:11:08,297 - SecurityScanner - INFO - Collected 2 system logs
+2025-09-20 15:11:08,298 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\System.evtx'
+2025-09-20 15:11:08,298 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:11:08,299 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Application.evtx'
+2025-09-20 15:11:08,300 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:11:08,300 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Security.evtx'
+2025-09-20 15:11:08,301 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:11:08,301 - SecurityScanner - INFO - Collected 1 logs from realtime source
+2025-09-20 15:11:08,302 - SecurityScanner - INFO - Collected 1 logs from realtime source
+2025-09-20 15:11:08,302 - SecurityScanner - INFO - Collected 1 logs from realtime source
+2025-09-20 15:26:30,862 - SecurityScanner - INFO - Collected 2 system logs
+2025-09-20 15:26:30,864 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\System.evtx'
+2025-09-20 15:26:30,865 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:26:30,865 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Application.evtx'
+2025-09-20 15:26:30,866 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:26:30,866 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Security.evtx'
+2025-09-20 15:26:30,866 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:32:38,098 - SecurityScanner - INFO - Collected 2 system logs
+2025-09-20 15:32:38,100 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\System.evtx'
+2025-09-20 15:32:38,101 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:32:38,101 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Application.evtx'
+2025-09-20 15:32:38,102 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:32:38,103 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Security.evtx'
+2025-09-20 15:32:38,103 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:38:40,933 - SecurityScanner - INFO - Collected 2 system logs
+2025-09-20 15:38:40,934 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\System.evtx'
+2025-09-20 15:38:40,934 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:38:40,935 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Application.evtx'
+2025-09-20 15:38:40,935 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:38:40,936 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Security.evtx'
+2025-09-20 15:38:40,936 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:38:45,019 - SecurityScanner - INFO - Collected 1 logs from syslog source
+2025-09-20 15:54:43,287 - SecurityScanner - INFO - Collected 2 system logs
+2025-09-20 15:54:43,289 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\System.evtx'
+2025-09-20 15:54:43,289 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:54:43,290 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Application.evtx'
+2025-09-20 15:54:43,291 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:54:43,291 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Security.evtx'
+2025-09-20 15:54:43,292 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:58:56,069 - SecurityScanner - INFO - Collected 2 system logs
+2025-09-20 15:58:56,070 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\System.evtx'
+2025-09-20 15:58:56,070 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:58:56,071 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Application.evtx'
+2025-09-20 15:58:56,071 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:58:56,072 - SecurityScanner - ERROR - File collection failed: [Errno 13] Permission denied: 'C:\\Windows\\System32\\winevt\\Logs\\Security.evtx'
+2025-09-20 15:58:56,072 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 15:58:56,073 - SecurityScanner - INFO - Collected 1 logs from file source
+2025-09-20 16:05:07,094 - SecurityScanner - INFO - Collected 291 system logs
+2025-09-20 16:05:07,225 - SecurityScanner - INFO - Collected 151 logs from command source
+2025-09-20 16:05:07,350 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:05:07,427 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:05:07,511 - SecurityScanner - INFO - Collected 151 logs from command source
+2025-09-20 16:05:07,646 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:05:07,713 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:11:44,200 - SecurityScanner - INFO - Collected 1733 system logs
+2025-09-20 16:11:44,277 - SecurityScanner - INFO - Collected 151 logs from command source
+2025-09-20 16:11:44,354 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:11:44,399 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:11:44,560 - SecurityScanner - INFO - Collected 995 additional logs
+2025-09-20 16:12:00,079 - SecurityScanner - INFO - Collected 1733 system logs
+2025-09-20 16:12:00,133 - SecurityScanner - INFO - Collected 151 logs from command source
+2025-09-20 16:12:00,208 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:12:00,249 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:12:00,412 - SecurityScanner - INFO - Collected 995 additional logs
+2025-09-20 16:12:32,797 - SecurityScanner - INFO - Collected 291 system logs
+2025-09-20 16:12:32,854 - SecurityScanner - INFO - Collected 151 logs from command source
+2025-09-20 16:12:32,932 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:12:32,971 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:16:44,576 - SecurityScanner - INFO - Collected 291 system logs
+2025-09-20 16:16:44,653 - SecurityScanner - INFO - Collected 151 logs from command source
+2025-09-20 16:16:44,728 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:16:44,769 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:19:53,757 - SecurityScanner - INFO - Collected 291 system logs
+2025-09-20 16:19:53,835 - SecurityScanner - INFO - Collected 151 logs from command source
+2025-09-20 16:19:53,901 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:19:53,947 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:42:11,293 - SecurityScanner - INFO - Collected 299 system logs
+2025-09-20 16:42:11,399 - SecurityScanner - INFO - Collected 159 logs from command source
+2025-09-20 16:42:11,531 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:42:11,836 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:49:41,692 - SecurityScanner - INFO - Collected 299 system logs
+2025-09-20 16:49:41,785 - SecurityScanner - INFO - Collected 159 logs from command source
+2025-09-20 16:49:41,866 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:49:41,910 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:51:53,681 - SecurityScanner - INFO - Collected 299 system logs
+2025-09-20 16:51:53,746 - SecurityScanner - INFO - Collected 159 logs from command source
+2025-09-20 16:51:53,832 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:51:53,878 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:56:48,089 - SecurityScanner - INFO - Collected 299 system logs
+2025-09-20 16:56:48,151 - SecurityScanner - INFO - Collected 159 logs from command source
+2025-09-20 16:56:48,227 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:56:48,268 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:58:15,707 - SecurityScanner - INFO - Collected 299 system logs
+2025-09-20 16:58:15,783 - SecurityScanner - INFO - Collected 159 logs from command source
+2025-09-20 16:58:15,863 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:58:15,908 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:58:16,002 - SecurityScanner - INFO - Collected 159 logs from command source
+2025-09-20 16:58:16,074 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:58:16,125 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:59:40,955 - SecurityScanner - INFO - Collected 299 system logs
+2025-09-20 16:59:41,004 - SecurityScanner - INFO - Collected 159 logs from command source
+2025-09-20 16:59:41,075 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:59:41,113 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 16:59:41,163 - SecurityScanner - INFO - Collected 159 logs from command source
+2025-09-20 16:59:41,232 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 16:59:41,268 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 17:06:15,541 - SecurityScanner - INFO - Collected 299 system logs
+2025-09-20 17:06:15,632 - SecurityScanner - INFO - Collected 159 logs from command source
+2025-09-20 17:06:15,711 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 17:06:15,757 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 17:30:31,612 - SecurityScanner - INFO - Collected 285 system logs
+2025-09-20 17:30:31,763 - SecurityScanner - INFO - Collected 145 logs from command source
+2025-09-20 17:30:31,897 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 17:30:31,985 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 17:34:12,665 - azure.identity._credentials.environment - INFO - No environment configuration found.
+2025-09-20 17:34:12,697 - azure.identity._credentials.managed_identity - INFO - ManagedIdentityCredential will use IMDS
+2025-09-20 22:16:57,115 - SecurityScanner - INFO - Collected 356 system logs
+2025-09-20 22:16:57,175 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 22:16:57,245 - SecurityScanner - INFO - Collected 216 logs from command source
+2025-09-20 22:16:57,295 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 22:35:28,488 - SecurityScanner - INFO - Collected 356 system logs
+2025-09-20 22:35:28,567 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 22:35:28,621 - SecurityScanner - INFO - Collected 216 logs from command source
+2025-09-20 22:35:28,654 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 22:52:01,519 - SecurityScanner - INFO - Collected 280 system logs
+2025-09-20 22:52:01,603 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 22:52:01,663 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 22:52:01,699 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 22:52:01,748 - SecurityScanner - INFO - Collected 280 logs from command source
+2025-09-20 22:52:15,473 - SecurityScanner - INFO - Collected 280 system logs
+2025-09-20 22:52:15,512 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 22:52:15,567 - SecurityScanner - INFO - Collected 140 logs from command source
+2025-09-20 22:52:15,599 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-20 22:52:15,641 - SecurityScanner - INFO - Collected 280 logs from command source
+2025-09-23 12:13:59,141 - SecurityScanner - INFO - Collected 317 system logs
+2025-09-23 12:13:59,201 - SecurityScanner - INFO - Collected 149 logs from command source
+2025-09-23 12:13:59,269 - SecurityScanner - INFO - Collected 168 logs from command source
+2025-09-23 12:13:59,317 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-23 12:14:59,604 - azure.identity._credentials.environment - INFO - No environment configuration found.
+2025-09-23 12:14:59,613 - azure.identity._credentials.managed_identity - INFO - ManagedIdentityCredential will use IMDS
+2025-09-23 12:15:02,597 - azure.identity._credentials.environment - INFO - No environment configuration found.
+2025-09-23 12:15:02,597 - azure.identity._credentials.managed_identity - INFO - ManagedIdentityCredential will use IMDS
+2025-09-23 12:20:51,920 - SecurityScanner - INFO - Collected 572 system logs
+2025-09-23 12:20:51,982 - SecurityScanner - INFO - Collected 142 logs from command source
+2025-09-23 12:20:52,037 - SecurityScanner - INFO - Collected 430 logs from command source
+2025-09-23 12:20:52,085 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-23 12:26:04,943 - azure.identity._credentials.environment - INFO - No environment configuration found.
+2025-09-23 12:26:04,944 - azure.identity._credentials.managed_identity - INFO - ManagedIdentityCredential will use IMDS
+2025-09-23 12:26:08,098 - azure.identity._credentials.environment - INFO - No environment configuration found.
+2025-09-23 12:26:08,099 - azure.identity._credentials.managed_identity - INFO - ManagedIdentityCredential will use IMDS
+2025-09-23 17:26:43,924 - SecurityScanner - INFO - Collected 412 system logs
+2025-09-23 17:26:43,987 - SecurityScanner - INFO - Collected 156 logs from command source
+2025-09-23 17:26:44,051 - SecurityScanner - INFO - Collected 256 logs from command source
+2025-09-23 17:26:44,097 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-23 17:26:44,163 - SecurityScanner - INFO - Collected 300 logs from command source
+2025-09-23 17:26:53,422 - SecurityScanner - INFO - Collected 412 system logs
+2025-09-23 17:26:53,493 - SecurityScanner - INFO - Collected 156 logs from command source
+2025-09-23 17:26:53,558 - SecurityScanner - INFO - Collected 256 logs from command source
+2025-09-23 17:26:53,607 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-23 17:26:53,674 - SecurityScanner - INFO - Collected 300 logs from command source
+2025-09-23 17:32:39,659 - SecurityScanner - INFO - Collected 410 system logs
+2025-09-23 17:32:39,727 - SecurityScanner - INFO - Collected 154 logs from command source
+2025-09-23 17:32:39,793 - SecurityScanner - INFO - Collected 256 logs from command source
+2025-09-23 17:32:39,844 - SecurityScanner - INFO - Collected 1 logs from command source
+2025-09-23 17:32:39,916 - SecurityScanner - INFO - Collected 299 logs from command source
+2025-09-25 10:02:44,369 - SecurityScanner - INFO - Added 34 log sources
+2025-09-25 10:03:10,910 - SecurityScanner - ERROR - Failed to collect from Windows System Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:10,910 - SecurityScanner - ERROR - Failed to collect from Windows Application Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:10,911 - SecurityScanner - ERROR - Failed to collect from Boot/Shutdown Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:10,912 - SecurityScanner - ERROR - Failed to collect from Driver Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,495 - SecurityScanner - INFO - Collected 4963 logs from Application Logs: C:\Users\*\AppData\Local\*\*.log
+2025-09-25 10:03:14,567 - SecurityScanner - INFO - Collected 100 logs from Application Logs: C:\Users\*\AppData\Roaming\*\*.log
+2025-09-25 10:03:14,568 - SecurityScanner - ERROR - Failed to collect from IIS Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:03:14,568 - SecurityScanner - ERROR - Failed to collect from MySQL Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:03:14,569 - SecurityScanner - ERROR - Failed to collect from PostgreSQL Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:03:14,569 - SecurityScanner - ERROR - Failed to collect from PostgreSQL Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:03:14,570 - SecurityScanner - ERROR - Failed to collect from MongoDB Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:03:14,570 - SecurityScanner - ERROR - Failed to collect from Middleware Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:03:14,571 - SecurityScanner - ERROR - Failed to collect from Middleware Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:03:14,572 - SecurityScanner - ERROR - Failed to collect from Windows Authentication Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,573 - SecurityScanner - ERROR - Failed to collect from IDS/IPS Logs: *.json: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:03:14,574 - SecurityScanner - ERROR - Failed to collect from Windows Firewall Status: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,575 - SecurityScanner - ERROR - Failed to collect from Antivirus Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:03:14,575 - SecurityScanner - ERROR - Failed to collect from Antivirus Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:03:14,576 - SecurityScanner - ERROR - Failed to collect from Antivirus Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:03:14,577 - SecurityScanner - ERROR - Failed to collect from Network Connections: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,577 - SecurityScanner - ERROR - Failed to collect from Socket Statistics: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,579 - SecurityScanner - ERROR - Failed to collect from Network Device Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,580 - SecurityScanner - ERROR - Failed to collect from VPN Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:03:14,580 - SecurityScanner - ERROR - Failed to collect from Container: Docker Containers: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,582 - SecurityScanner - ERROR - Failed to collect from Container: Docker Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,583 - SecurityScanner - ERROR - Failed to collect from Container: Kubernetes Pods: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,583 - SecurityScanner - ERROR - Failed to collect from Kubernetes Events: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,584 - SecurityScanner - ERROR - Failed to collect from CI/CD Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:03:14,585 - SecurityScanner - ERROR - Failed to collect from Cloud: AWS CloudTrail: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,587 - SecurityScanner - ERROR - Failed to collect from Cloud: Azure Monitor: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,588 - SecurityScanner - ERROR - Failed to collect from Cloud: GCP Audit: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,588 - SecurityScanner - ERROR - Failed to collect from Business Transaction Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,589 - SecurityScanner - ERROR - Failed to collect from E-commerce Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:03:14,590 - SecurityScanner - INFO - Collected 5094 logs from 2/34 sources
+2025-09-25 10:08:04,637 - SecurityScanner - INFO - Added 34 log sources
+2025-09-25 10:08:20,866 - SecurityScanner - ERROR - Failed to collect from Windows System Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:20,867 - SecurityScanner - ERROR - Failed to collect from Windows Application Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:20,867 - SecurityScanner - ERROR - Failed to collect from Boot/Shutdown Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:20,868 - SecurityScanner - ERROR - Failed to collect from Driver Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,445 - SecurityScanner - INFO - Collected 4963 logs from Application Logs: C:\Users\*\AppData\Local\*\*.log
+2025-09-25 10:08:21,465 - SecurityScanner - INFO - Collected 100 logs from Application Logs: C:\Users\*\AppData\Roaming\*\*.log
+2025-09-25 10:08:21,466 - SecurityScanner - ERROR - Failed to collect from IIS Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:08:21,467 - SecurityScanner - ERROR - Failed to collect from MySQL Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:08:21,467 - SecurityScanner - ERROR - Failed to collect from PostgreSQL Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:08:21,468 - SecurityScanner - ERROR - Failed to collect from PostgreSQL Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:08:21,468 - SecurityScanner - ERROR - Failed to collect from MongoDB Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:08:21,469 - SecurityScanner - ERROR - Failed to collect from Middleware Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:08:21,470 - SecurityScanner - ERROR - Failed to collect from Middleware Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:08:21,471 - SecurityScanner - ERROR - Failed to collect from Windows Authentication Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,471 - SecurityScanner - ERROR - Failed to collect from IDS/IPS Logs: *.json: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:08:21,474 - SecurityScanner - ERROR - Failed to collect from Windows Firewall Status: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,476 - SecurityScanner - ERROR - Failed to collect from Antivirus Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:08:21,477 - SecurityScanner - ERROR - Failed to collect from Antivirus Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:08:21,478 - SecurityScanner - ERROR - Failed to collect from Antivirus Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:08:21,479 - SecurityScanner - ERROR - Failed to collect from Network Connections: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,480 - SecurityScanner - ERROR - Failed to collect from Socket Statistics: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,481 - SecurityScanner - ERROR - Failed to collect from Network Device Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,482 - SecurityScanner - ERROR - Failed to collect from VPN Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:08:21,483 - SecurityScanner - ERROR - Failed to collect from Container: Docker Containers: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,483 - SecurityScanner - ERROR - Failed to collect from Container: Docker Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,484 - SecurityScanner - ERROR - Failed to collect from Container: Kubernetes Pods: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,485 - SecurityScanner - ERROR - Failed to collect from Kubernetes Events: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,486 - SecurityScanner - ERROR - Failed to collect from CI/CD Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:08:21,487 - SecurityScanner - ERROR - Failed to collect from Cloud: AWS CloudTrail: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,487 - SecurityScanner - ERROR - Failed to collect from Cloud: Azure Monitor: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,488 - SecurityScanner - ERROR - Failed to collect from Cloud: GCP Audit: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,489 - SecurityScanner - ERROR - Failed to collect from Business Transaction Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,490 - SecurityScanner - ERROR - Failed to collect from E-commerce Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:08:21,491 - SecurityScanner - INFO - Collected 5094 logs from 2/34 sources
+2025-09-25 10:23:27,737 - SecurityScanner - INFO - Added 34 log sources
+2025-09-25 10:25:43,835 - SecurityScanner - INFO - Added 34 log sources
+2025-09-25 10:25:51,786 - SecurityScanner - ERROR - Failed to collect from Windows System Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:51,787 - SecurityScanner - ERROR - Failed to collect from Windows Application Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:51,788 - SecurityScanner - ERROR - Failed to collect from Boot/Shutdown Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:51,789 - SecurityScanner - ERROR - Failed to collect from Driver Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,458 - SecurityScanner - INFO - Collected 4963 logs from Application Logs: C:\Users\*\AppData\Local\*\*.log
+2025-09-25 10:25:52,485 - SecurityScanner - INFO - Collected 100 logs from Application Logs: C:\Users\*\AppData\Roaming\*\*.log
+2025-09-25 10:25:52,486 - SecurityScanner - ERROR - Failed to collect from IIS Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:25:52,486 - SecurityScanner - ERROR - Failed to collect from MySQL Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:25:52,486 - SecurityScanner - ERROR - Failed to collect from PostgreSQL Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:25:52,487 - SecurityScanner - ERROR - Failed to collect from PostgreSQL Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:25:52,488 - SecurityScanner - ERROR - Failed to collect from MongoDB Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:25:52,489 - SecurityScanner - ERROR - Failed to collect from Middleware Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:25:52,490 - SecurityScanner - ERROR - Failed to collect from Middleware Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:25:52,491 - SecurityScanner - ERROR - Failed to collect from Windows Authentication Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,493 - SecurityScanner - ERROR - Failed to collect from IDS/IPS Logs: *.json: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:25:52,494 - SecurityScanner - ERROR - Failed to collect from Windows Firewall Status: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,497 - SecurityScanner - ERROR - Failed to collect from Antivirus Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:25:52,499 - SecurityScanner - ERROR - Failed to collect from Antivirus Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:25:52,500 - SecurityScanner - ERROR - Failed to collect from Antivirus Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:25:52,501 - SecurityScanner - ERROR - Failed to collect from Network Connections: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,502 - SecurityScanner - ERROR - Failed to collect from Socket Statistics: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,503 - SecurityScanner - ERROR - Failed to collect from Network Device Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,504 - SecurityScanner - ERROR - Failed to collect from VPN Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:25:52,504 - SecurityScanner - ERROR - Failed to collect from Container: Docker Containers: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,506 - SecurityScanner - ERROR - Failed to collect from Container: Docker Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,506 - SecurityScanner - ERROR - Failed to collect from Container: Kubernetes Pods: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,507 - SecurityScanner - ERROR - Failed to collect from Kubernetes Events: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,508 - SecurityScanner - ERROR - Failed to collect from CI/CD Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:25:52,508 - SecurityScanner - ERROR - Failed to collect from Cloud: AWS CloudTrail: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,509 - SecurityScanner - ERROR - Failed to collect from Cloud: Azure Monitor: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,510 - SecurityScanner - ERROR - Failed to collect from Cloud: GCP Audit: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,510 - SecurityScanner - ERROR - Failed to collect from Business Transaction Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,511 - SecurityScanner - ERROR - Failed to collect from E-commerce Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:25:52,512 - SecurityScanner - INFO - Collected 5094 logs from 2/34 sources
+2025-09-25 10:28:52,199 - SecurityScanner - ERROR - Failed to collect from Windows System Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,199 - SecurityScanner - ERROR - Failed to collect from Windows Application Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,201 - SecurityScanner - ERROR - Failed to collect from Boot/Shutdown Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,201 - SecurityScanner - ERROR - Failed to collect from Driver Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,748 - SecurityScanner - INFO - Collected 4963 logs from Application Logs: C:\Users\*\AppData\Local\*\*.log
+2025-09-25 10:28:52,766 - SecurityScanner - INFO - Collected 100 logs from Application Logs: C:\Users\*\AppData\Roaming\*\*.log
+2025-09-25 10:28:52,767 - SecurityScanner - ERROR - Failed to collect from IIS Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:28:52,768 - SecurityScanner - ERROR - Failed to collect from MySQL Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:28:52,768 - SecurityScanner - ERROR - Failed to collect from PostgreSQL Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:28:52,769 - SecurityScanner - ERROR - Failed to collect from PostgreSQL Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:28:52,769 - SecurityScanner - ERROR - Failed to collect from MongoDB Logs: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:28:52,770 - SecurityScanner - ERROR - Failed to collect from Middleware Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:28:52,770 - SecurityScanner - ERROR - Failed to collect from Middleware Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:28:52,771 - SecurityScanner - ERROR - Failed to collect from Windows Authentication Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,771 - SecurityScanner - ERROR - Failed to collect from IDS/IPS Logs: *.json: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:28:52,772 - SecurityScanner - ERROR - Failed to collect from Windows Firewall Status: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,772 - SecurityScanner - ERROR - Failed to collect from Antivirus Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:28:52,773 - SecurityScanner - ERROR - Failed to collect from Antivirus Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:28:52,774 - SecurityScanner - ERROR - Failed to collect from Antivirus Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:28:52,776 - SecurityScanner - ERROR - Failed to collect from Network Connections: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,777 - SecurityScanner - ERROR - Failed to collect from Socket Statistics: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,777 - SecurityScanner - ERROR - Failed to collect from Network Device Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,778 - SecurityScanner - ERROR - Failed to collect from VPN Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:28:52,780 - SecurityScanner - ERROR - Failed to collect from Container: Docker Containers: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,783 - SecurityScanner - ERROR - Failed to collect from Container: Docker Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,783 - SecurityScanner - ERROR - Failed to collect from Container: Kubernetes Pods: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,783 - SecurityScanner - ERROR - Failed to collect from Kubernetes Events: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,784 - SecurityScanner - ERROR - Failed to collect from CI/CD Logs: *.log: 'LogCollector' object has no attribute 'collect_from_file'
+2025-09-25 10:28:52,784 - SecurityScanner - ERROR - Failed to collect from Cloud: AWS CloudTrail: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,785 - SecurityScanner - ERROR - Failed to collect from Cloud: Azure Monitor: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,786 - SecurityScanner - ERROR - Failed to collect from Cloud: GCP Audit: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,787 - SecurityScanner - ERROR - Failed to collect from Business Transaction Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,788 - SecurityScanner - ERROR - Failed to collect from E-commerce Logs: 'LogCollector' object has no attribute 'collect_from_command'
+2025-09-25 10:28:52,789 - SecurityScanner - INFO - Collected 5094 logs from 2/34 sources
+2025-11-21 19:29:48,351 - SecurityScanner - INFO - Added 34 log sources
