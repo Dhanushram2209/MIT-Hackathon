@@ -37,4 +37,7 @@ git clone https://github.com/Dhanushram2209/MIT-Hackathon
 Install dependencies:
 pip install -r requirements.txt
 
+python -m venv myenv    
+.\myenv\Scripts\Activate.ps1  
+
 Run the application: streamlit run app.py --server.address localhost --server.port 8501
